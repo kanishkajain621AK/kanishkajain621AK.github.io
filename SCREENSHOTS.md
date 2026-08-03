@@ -20,7 +20,7 @@ a screenshot is public forever, including in Google's image index.
 |---|---|
 | Customer names, phone numbers, email addresses, delivery addresses | Reviews moderation, loyalty accounts, order lists, courier dashboards |
 | Order IDs and transaction references | Anywhere an order appears — these are often guessable/enumerable |
-| API keys, tokens, account IDs, connector credentials | Metrixcia connector screens, integration settings |
+| API keys, tokens, account IDs, connector credentials | Integration and settings screens |
 | Internal URLs, staging hostnames, IP addresses | Browser address bar — crop it out or use a clean window |
 | Employee names and internal usernames | Admin headers, "last edited by", audit trails |
 | Supplier and vendor names, cost prices, margins | Product admin, purchase data |
@@ -68,13 +68,6 @@ to ask first than to take it down after a competitor sees it. If the answer is n
 | `03-report-sample.png` | A few pages of a generated report side by side, ideally showing the page count. **Use your own birth details or dummy data, never a customer's.** |
 | `04-order-flow.png` | Pipeline/queue status view showing orders moving through stages |
 
-### `images/metrixcia/`
-| File | What to capture |
-|---|---|
-| `01-dashboard.png` | The cross-channel dashboard — blended spend, ROAS, CAC. **Redact absolute spend figures if your employer prefers; the layout is what sells it.** |
-| `02-connectors.png` | Connector list showing multiple sources and their token status. **Redact account IDs.** |
-| `03-report-view.png` | A computed report or export view |
-
 ### `images/courier/`
 | File | What to capture |
 |---|---|
@@ -110,14 +103,13 @@ to ask first than to take it down after a competitor sees it. If the answer is n
 
 ## Priority order
 
-If you only have an hour, do these six and publish — the rest can follow:
+If you only have an hour, do these five and publish — the rest can follow:
 
 1. `divine-hindu/05-lighthouse.png` — proves the performance claim
 2. `courier/03-rto-trend.png` — proves the logistics result (axis values optional)
 3. `divine-hindu/01-home.png` — proves the storefront is real and looks good
 4. `ai-engine/01-astrologer-dashboard.png` — proves the "30+ agents" claim
 5. `divine-hindu/03-cart-upsell.png` — proves custom cart work
-6. `metrixcia/01-dashboard.png` — proves the data platform exists
 
 A portfolio with six real screenshots and twenty-one placeholders is worse than one with six real screenshots
 and the rest of the slots deleted. If you're not going to fill a slot soon, delete that `<figure class="shot">`

@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Kanishka Jain — Shopify &amp; Full-Stack Engineer</title>
-<meta name="description" content="Shopify and full-stack engineer. Case studies from an 800-SKU storefront trading at ~US$600K monthly GMV: custom apps, an AI agent platform, a marketing data platform and a logistics routing engine.">
+<meta name="description" content="Shopify and full-stack engineer. Case studies from an 800-SKU storefront trading at ~US$600K monthly GMV: custom apps, an AI agent platform and a logistics routing engine.">
 <meta property="og:title" content="Kanishka Jain — Shopify &amp; Full-Stack Engineer">
-<meta property="og:description" content="Case studies: 800-SKU Shopify storefront, in-house reviews &amp; loyalty apps, AI agent platform, marketing data platform, courier allocation engine.">
+<meta property="og:description" content="Case studies: 800-SKU Shopify storefront, in-house reviews &amp; loyalty apps, AI agent platform, courier allocation engine.">
 <meta property="og:type" content="website">
 <style>
 :root{
@@ -166,7 +166,7 @@ footer a{color:var(--text-2)}
     I own end-to-end engineering for a D2C business trading at <strong>₹5 crore (~US$600K) monthly GMV</strong>.
     That means an 800-SKU Shopify storefront hand-coded in Liquid, two custom Shopify applications that
     replaced <strong>US$1,000+/month</strong> of third-party SaaS, an <strong>AI platform running 30+ domain-tuned agents</strong>,
-    a marketing data platform, and a logistics engine that cuts return-to-origin losses.
+    and a logistics engine that cuts return-to-origin losses.
     Every system below was designed and built from scratch, and is live in production.
   </p>
   <div class="herolinks">
@@ -195,7 +195,7 @@ footer a{color:var(--text-2)}
       including whiteboarding the parts that can't be shown here.
     </p>
     <p>
-      Five systems get a full write-up. Four more are summarised at the end. Everything listed is in production.
+      Four systems get a full write-up. Four more are summarised at the end. Everything listed is in production.
     </p>
   </div>
 </div></section>
@@ -328,10 +328,10 @@ footer a{color:var(--text-2)}
   </p>
 
   <div class="shots">
-    <figure class="shot"><img src="images/divine-hindu/01-home.png" alt="Storefront home"><div class="cap">Home — mega menu and collection rails</div></figure>
-    <figure class="shot"><img src="images/divine-hindu/02-pdp.png" alt="Product page"><div class="cap">Product page</div></figure>
-    <figure class="shot"><img src="images/divine-hindu/03-cart-upsell.png" alt="Cart with upsells"><div class="cap">Custom cart with qualified upsells</div></figure>
-    <figure class="shot"><img src="images/divine-hindu/04-combo-builder.png" alt="Combo builder"><div class="cap">Build Your Own Combo — tiered discounting</div></figure>
+    <figure class="shot"><img src="images/divine-hindu/01-home.jpg" alt="Storefront home"><div class="cap">Home — mega menu and collection rails</div></figure>
+    <figure class="shot"><img src="images/divine-hindu/02-pdp.jpg" alt="Product page"><div class="cap">Product page</div></figure>
+    <figure class="shot"><img src="images/divine-hindu/03-cart-upsell.jpg" alt="Cart with upsells"><div class="cap">Custom cart with qualified upsells</div></figure>
+    <figure class="shot"><img src="images/divine-hindu/04-combo-builder.jpg" alt="Combo builder"><div class="cap">Build Your Own Combo — tiered discounting</div></figure>
     <figure class="shot"><img src="images/divine-hindu/05-lighthouse.png" alt="Lighthouse report"><div class="cap">Lighthouse mobile report</div></figure>
   </div>
 </article>
@@ -441,7 +441,7 @@ footer a{color:var(--text-2)}
   </div>
 
   <div class="shots">
-    <figure class="shot"><img src="images/reviews-loyalty/01-reviews-widget.png" alt="Reviews widget"><div class="cap">Storefront review widget</div></figure>
+    <figure class="shot"><img src="images/reviews-loyalty/01-reviews-widget.jpg" alt="Reviews widget"><div class="cap">Storefront review widget</div></figure>
     <figure class="shot"><img src="images/reviews-loyalty/02-reviews-admin.png" alt="Reviews admin"><div class="cap">Moderation queue</div></figure>
     <figure class="shot"><img src="images/reviews-loyalty/03-loyalty-admin.png" alt="Loyalty admin"><div class="cap">Loyalty rules and tiers</div></figure>
     <figure class="shot"><img src="images/reviews-loyalty/04-loyalty-widget.png" alt="Loyalty panel"><div class="cap">Customer loyalty panel</div></figure>
@@ -569,100 +569,6 @@ footer a{color:var(--text-2)}
   </div>
 </article>
 
-<!-- METRIXCIA -->
-<article class="case">
-  <div class="case-top">
-    <h2>Metrixcia — marketing data aggregation &amp; attribution platform</h2>
-    <span class="meta">Architect &amp; engineer · internal product</span>
-  </div>
-  <div class="tags">
-    <span class="tag">ETL</span><span class="tag">OAuth 2.0</span><span class="tag">Meta Ads API</span>
-    <span class="tag">Google Ads API</span><span class="tag">GA4</span><span class="tag">Shopify Admin API</span>
-    <span class="tag">PostgreSQL</span><span class="tag plain">Attribution modelling</span>
-  </div>
-
-  <div class="split">
-    <div>
-      <h4>The problem</h4>
-      <p>
-        Every advertising and analytics platform reports on itself, in its own schema, on its own attribution
-        window. Meta claims the sale, Google claims the same sale, GA4 disagrees with both, and Shopify knows
-        what actually got paid for. Reconciling that by hand into a weekly spreadsheet is a job nobody should
-        have, and the commercial tools that automate it are priced per data source.
-      </p>
-    </div>
-    <div>
-      <h4>The constraints</h4>
-      <ul>
-        <li><strong>Token lifecycle is the hard part.</strong> Long-lived marketing API credentials expire,
-          get revoked, and fail silently — a pipeline that breaks quietly is worse than no pipeline.</li>
-        <li><strong>Rate limits and backfill.</strong> Each platform meters differently.</li>
-        <li><strong>Schema drift.</strong> Ad platforms rename and deprecate fields without much warning.</li>
-        <li><strong>The output has to be trusted</strong> enough to spend money against.</li>
-      </ul>
-    </div>
-  </div>
-
-  <h3>What I built</h3>
-  <ul>
-    <li><strong>OAuth-authenticated connectors</strong> per source, with full token lifecycle management —
-      refresh, expiry detection and loud failure when a credential dies.</li>
-    <li><strong>Scheduled extraction</strong> with per-source rate-limit handling and backfill.</li>
-    <li><strong>A normalisation layer</strong> that maps every source's schema onto one unified model — the
-      piece that makes cross-channel comparison possible at all.</li>
-    <li><strong>Computed cross-channel modelling</strong>: blended spend, ROAS and CAC calculated against
-      Shopify's actual revenue rather than each platform's self-reported conversions.</li>
-    <li><strong>Dashboards and exports</strong> for the people making the spend decisions.</li>
-  </ul>
-
-  <figure>
-    <svg viewBox="0 0 900 260" role="img" aria-label="Metrixcia data pipeline">
-      <rect class="bx" x="15" y="20" width="150" height="44" rx="8"/><text class="tx" x="90" y="47" text-anchor="middle">Meta Ads</text>
-      <rect class="bx" x="15" y="76" width="150" height="44" rx="8"/><text class="tx" x="90" y="103" text-anchor="middle">Google Ads</text>
-      <rect class="bx" x="15" y="132" width="150" height="44" rx="8"/><text class="tx" x="90" y="159" text-anchor="middle">GA4</text>
-      <rect class="bx" x="15" y="188" width="150" height="44" rx="8"/><text class="tx" x="90" y="215" text-anchor="middle">Shopify</text>
-
-      <rect class="bx-a" x="230" y="90" width="160" height="76" rx="8"/>
-      <text class="tx" x="310" y="118" text-anchor="middle">Connector layer</text>
-      <text class="tx-s" x="310" y="136" text-anchor="middle">OAuth · refresh</text>
-      <text class="tx-s" x="310" y="152" text-anchor="middle">rate limits · backfill</text>
-
-      <rect class="bx-a" x="440" y="90" width="160" height="76" rx="8"/>
-      <text class="tx" x="520" y="118" text-anchor="middle">Normalisation</text>
-      <text class="tx-s" x="520" y="136" text-anchor="middle">one unified schema</text>
-      <text class="tx-s" x="520" y="152" text-anchor="middle">drift tolerant</text>
-
-      <rect class="bx" x="650" y="40" width="160" height="60" rx="8"/>
-      <text class="tx" x="730" y="65" text-anchor="middle">Warehouse</text>
-      <text class="tx-s" x="730" y="83" text-anchor="middle">PostgreSQL</text>
-
-      <rect class="bx-a" x="650" y="150" width="160" height="70" rx="8"/>
-      <text class="tx" x="730" y="176" text-anchor="middle">Blended metrics</text>
-      <text class="tx-s" x="730" y="194" text-anchor="middle">spend · ROAS · CAC</text>
-      <text class="tx-s" x="730" y="210" text-anchor="middle">dashboards · exports</text>
-
-      <path class="ar" d="M165 42 H200 M165 98 H200 M165 154 H200 M165 210 H200 M200 42 V210 M200 128 H230"/>
-      <path class="ar" d="M390 128 H440"/>
-      <path class="ar" d="M600 118 H625 V70 H650"/>
-      <path class="ar" d="M600 140 H625 V185 H650"/>
-      <path class="ar" d="M730 100 V150"/>
-    </svg>
-    <figcaption>Four sources, one schema. Revenue truth comes from Shopify, not from the ad platforms.</figcaption>
-  </figure>
-
-  <div class="callout">
-    <p><strong>The insight that made it useful:</strong> don't try to adjudicate between platforms' conflicting
-      attribution claims. Anchor on the transaction record and measure every channel against that. It converts an
-      unwinnable argument into arithmetic.</p>
-  </div>
-
-  <div class="shots">
-    <figure class="shot"><img src="images/metrixcia/01-dashboard.png" alt="Metrixcia dashboard"><div class="cap">Cross-channel dashboard</div></figure>
-    <figure class="shot"><img src="images/metrixcia/02-connectors.png" alt="Connectors"><div class="cap">Connector and token status</div></figure>
-    <figure class="shot"><img src="images/metrixcia/03-report-view.png" alt="Report view"><div class="cap">Computed report view</div></figure>
-  </div>
-</article>
-
 <!-- COURIER -->
 <article class="case">
   <div class="case-top">
@@ -675,8 +581,9 @@ footer a{color:var(--text-2)}
   </div>
 
   <div class="stats" style="margin:0 0 26px">
-    <div class="stat"><div class="v">12 pts</div><div class="l">Absolute reduction across all shipments</div></div>
     <div class="stat"><div class="v">Per-pincode</div><div class="l">Granularity of carrier scoring</div></div>
+    <div class="stat"><div class="v">Automatic</div><div class="l">Carrier assigned at order creation</div></div>
+    <div class="stat"><div class="v">Self-tuning</div><div class="l">Scores update with every shipment</div></div>
   </div>
 
   <div class="split">
@@ -804,7 +711,7 @@ footer a{color:var(--text-2)}
     </div>
 
     <div class="card">
-      <img src="images/pujaghar/01-home.png" alt="Pujaghar">
+      <img src="images/pujaghar/01-home.jpg" alt="Pujaghar">
       <h3>Pujaghar</h3>
       <div class="meta">Custom storefront, built from scratch ·
         <a href="https://www.pujaghar.store/" target="_blank" rel="noopener">pujaghar.store ↗</a></div>
