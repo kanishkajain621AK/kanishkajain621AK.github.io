@@ -28,5 +28,5 @@ modes, no external requests.
 
 ## Contact
 
-[kanishka@divinehindu.in](mailto:kanishka@divinehindu.in) ·
+[kanishkajain621@gmail.com](mailto:kanishkajain621@gmail.com) ·
 [LinkedIn](https://www.linkedin.com/in/kanishka-jain-ak)

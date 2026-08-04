@@ -52,13 +52,34 @@ to ask first than to take it down after a competitor sees it. If the answer is n
 | `04-combo-builder.png` | Build Your Own Combo mid-flow, with the tiered discount visible |
 | `05-lighthouse.png` | **The single most valuable screenshot on the site.** Run Lighthouse mobile in Chrome DevTools on a product page, capture the score wheel with performance 90+. Include the URL so it's verifiable. |
 
-### `images/reviews-loyalty/`
+### `images/reviews-app/`
 | File | What to capture |
 |---|---|
-| `01-reviews-widget.png` | Storefront review widget with media reviews visible |
-| `02-reviews-admin.png` | Your moderation queue — **redact customer names/emails or use dummy data** |
-| `03-loyalty-admin.png` | Loyalty rules, tiers and thresholds config screen |
-| `04-loyalty-widget.png` | Customer-facing loyalty panel — use a test account, not a real customer |
+| `01-storefront-widget.jpg` | Storefront review widget with media reviews visible |
+| `02-admin.png` | Moderation queue — **redact customer names/emails or use dummy data** |
+
+### `images/divine-points/`
+| File | What to capture |
+|---|---|
+| `01-admin.png` | Merchant admin — earn slabs, caps, expiry rules |
+| `02-storefront-widget.png` | Storefront widget — balance chip and cart redeem box |
+| `03-checkout-redeem.png` | The redeem step inside GoKwik one-click checkout — **the distinctive one** |
+
+### `images/super-app/`
+| File | What to capture |
+|---|---|
+| `01-home.png` | App home — shop and devotion surfaces together |
+| `02-astrology.png` | On-device Kundli or Panchang screen |
+| `03-ar-pooja.png` | AR pooja with a deity placed via the camera — **the most distinctive screen in the app** |
+| `04-jyotish.png` | Jyotish Live — astrologer profiles or chat |
+
+### `images/adcompass/`
+| File | What to capture |
+|---|---|
+| `01-dashboard.png` | Dashboard showing competitor creative clusters |
+| `02-test-plan.png` | The weekly ranked test plan with evidence attached — **the product's whole thesis in one screen** |
+| `03-teardown.png` | A strategy teardown or hooks analysis |
+| `04-heatmap.png` | Creative attention heatmap |
 
 ### `images/ai-engine/`
 | File | What to capture |
@@ -68,12 +89,14 @@ to ask first than to take it down after a competitor sees it. If the answer is n
 | `03-report-sample.png` | A few pages of a generated report side by side, ideally showing the page count. **Use your own birth details or dummy data, never a customer's.** |
 | `04-order-flow.png` | Pipeline/queue status view showing orders moving through stages |
 
-### `images/courier/`
+### `images/marg/`
 | File | What to capture |
 |---|---|
-| `01-allocation-dashboard.png` | Carrier scores per area — the ranking logic made visible |
-| `02-pincode-map.png` | Pincode serviceability/performance view |
-| `03-rto-trend.png` | The RTO trend line falling after rollout. **Crop or hide the y-axis values** — you've chosen not to publish absolute rates, and the shape of the curve persuades without them. If in doubt, delete this slot. |
+| `01-allocation-tester.png` | **The most distinctive screen in the product** — chosen origin plus every rejected origin with its reason |
+| `02-integrations.png` | Console → Integrations, the carrier credential cards |
+| `03-warehouses.png` | Console → Warehouses, per-carrier registration state on a warehouse card |
+
+**Crop or blur the production hostname in the browser bar on all three.**
 
 ### `images/public-app/`
 | File | What to capture |
@@ -106,7 +129,7 @@ to ask first than to take it down after a competitor sees it. If the answer is n
 If you only have an hour, do these five and publish — the rest can follow:
 
 1. `divine-hindu/05-lighthouse.png` — proves the performance claim
-2. `courier/03-rto-trend.png` — proves the logistics result (axis values optional)
+2. `marg/01-allocation-tester.png` — the most distinctive screen you have
 3. `divine-hindu/01-home.png` — proves the storefront is real and looks good
 4. `ai-engine/01-astrologer-dashboard.png` — proves the "30+ agents" claim
 5. `divine-hindu/03-cart-upsell.png` — proves custom cart work
