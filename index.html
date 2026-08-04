@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Kanishka Jain — Shopify &amp; Full-Stack Engineer</title>
-<meta name="description" content="Shopify and full-stack engineer. Case studies from an 800-SKU storefront trading at ~US$600K monthly GMV: custom apps, an AI agent platform and a logistics routing engine.">
+<meta name="description" content="Shopify and full-stack engineer. Case studies from an 800-SKU storefront trading at ~US$600K monthly GMV: custom apps, an automated report-generation and WhatsApp delivery platform, and an in-house shipping platform.">
 <meta property="og:title" content="Kanishka Jain — Shopify &amp; Full-Stack Engineer">
-<meta property="og:description" content="Case studies: 800-SKU Shopify storefront, in-house reviews &amp; loyalty apps, AI agent platform, courier allocation engine.">
+<meta property="og:description" content="Case studies: 800-SKU Shopify storefront, in-house reviews &amp; loyalty apps, astrology report platform, in-house shipping platform.">
 <meta property="og:type" content="website">
 <style>
 :root{
@@ -166,7 +166,7 @@ footer a{color:var(--text-2)}
     I own end-to-end engineering for a D2C business trading at <strong>₹5 crore (~US$600K) monthly GMV</strong>.
     That means an 800-SKU Shopify storefront hand-coded in Liquid, two custom Shopify applications that
     replaced <strong>US$1,000+/month</strong> of third-party SaaS, an <strong>AI platform running 30+ domain-tuned agents</strong>,
-    and a logistics engine that cuts return-to-origin losses.
+    and an in-house shipping platform replacing a 3PL aggregator, and a cross-platform super-app.
     Every system below was designed and built from scratch, and is live in production.
   </p>
   <div class="herolinks">
@@ -195,7 +195,7 @@ footer a{color:var(--text-2)}
       including whiteboarding the parts that can't be shown here.
     </p>
     <p>
-      Four systems get a full write-up. Four more are summarised at the end. Everything listed is in production.
+      Six systems get a full write-up. Four more are summarised at the end. Everything listed is in production.
     </p>
   </div>
 </div></section>
@@ -330,88 +330,235 @@ footer a{color:var(--text-2)}
 
 <article class="case">
   <div class="case-top">
-    <h2>Replacing SaaS: in-house reviews &amp; loyalty applications</h2>
-    <span class="meta">Lead engineer · both live in production</span>
+    <h2>Divine Points — loyalty &amp; cashback microservice</h2>
+    <span class="meta">Architect &amp; engineer · live in production</span>
   </div>
   <div class="tags">
-    <span class="tag">Custom Shopify apps</span><span class="tag">Reviews platform</span><span class="tag">Loyalty &amp; rewards</span>
-    <span class="tag plain">Merchant-configurable</span>
+    <span class="tag">Node.js / Express</span><span class="tag">SQLite · better-sqlite3</span>
+    <span class="tag">Shopify Admin GraphQL</span><span class="tag">App Proxy + webhooks</span>
+    <span class="tag">GoKwik KwikCheckout / KwikPass</span><span class="tag">WhatsApp · KwikEngage</span>
+    <span class="tag plain">Azure App Service</span>
   </div>
 
   <div class="stats" style="margin:0 0 26px">
     <div class="stat"><div class="v">US$1,000+<span class="d">/mo</span></div><div class="l">Subscription spend removed</div></div>
-    <div class="stat"><div class="v">2</div><div class="l">Paid apps replaced outright</div></div>
-    <div class="stat"><div class="v">0</div><div class="l">Vendor scripts left on the page</div></div>
+    <div class="stat"><div class="v">45 days</div><div class="l">FIFO point expiry, oldest lot spent first</div></div>
+    <div class="stat"><div class="v">4</div><div class="l">Independently authenticated API surfaces</div></div>
+    <div class="stat"><div class="v">1 phone</div><div class="l">One wallet across app, web and checkout</div></div>
   </div>
 
   <div class="split">
     <div>
-      <h4>The problem</h4>
+      <h4>Why build it</h4>
       <p>
-        Reviews and loyalty were running on subscription apps costing over <strong>US$1,000 a month</strong>
-        combined. The cost was the visible problem; the bigger one was that each app injected its own scripts
-        into the storefront, and neither could be configured into the rules the business actually wanted.
+        Off-the-shelf loyalty apps couldn't express the programme the brand actually wanted: prepaid-only
+        cashback, a hard redemption cap, short FIFO expiry, WhatsApp nudges, and redemption happening
+        <strong>inside</strong> a third-party one-click checkout rather than through a coupon field. Divine
+        Points is a small, purpose-built service that owns the ledger and plugs into Shopify and GoKwik at
+        exactly the right seams.
       </p>
     </div>
     <div>
-      <h4>Why build rather than switch</h4>
-      <ul>
-        <li>The performance work only holds if nothing re-adds vendor scripts later.</li>
-        <li>The rules are specific to this business, and off-the-shelf apps don't model them.</li>
-        <li>At US$12k a year, the build paid for itself quickly and keeps paying.</li>
-      </ul>
+      <h4>The programme</h4>
+      <p>
+        1 Mudra = ₹1. Earn 25% of order value, credited when the order is paid. Redeem up to 25% of an eligible
+        cart above ₹999. Coins expire 45 days after earning, drawn down oldest-first. Cancel or refund reverses
+        earned coins and restores redeemed ones. <strong>Every one of those values is admin-configurable at
+        runtime</strong> — including per-slab and new-versus-repeat earn rates and per-product overrides — with
+        no redeploy.
+      </p>
     </div>
   </div>
 
-  <h3>What I built</h3>
+  <h3>The redemption path</h3>
   <p>
-    Two separate applications, each with its own backend and its own admin. They aren't one system with two
-    faces — they solve different problems, they're deployed and versioned independently, and a fault in one
-    doesn't take the other down.
+    The hard part isn't the arithmetic, it's <em>where</em> redemption happens. Coins are spent inside GoKwik's
+    one-click checkout, which means a third party is quoting the customer a balance my service owns.
   </p>
-  <ul>
-    <li><strong>Reviews platform</strong> — review capture with photos and video, a moderation queue, and
-      storefront display, fully customisable rather than locked to a vendor's template.</li>
-    <li><strong>Loyalty and rewards programme</strong> — the earning and redemption rules the business wanted,
-      surfaced to customers on the storefront.</li>
-    <li><strong>Both fully manageable by non-technical staff.</strong> Every rule, tier and moderation action is
-      exposed in an admin the catalogue and support teams use directly. That was the requirement that shaped
-      both builds — a system only an engineer can change is a system that doesn't get changed.</li>
-  </ul>
 
   <figure>
-    <svg viewBox="0 0 900 280" role="img" aria-label="Two independent in-house applications">
-      <rect class="bx-a" x="330" y="20" width="240" height="52" rx="8"/>
-      <text class="tx" x="450" y="42" text-anchor="middle">Divine Hindu storefront</text>
-      <text class="tx-s" x="450" y="60" text-anchor="middle">Shopify</text>
+    <svg viewBox="0 0 900 250" role="img" aria-label="Divine Points redemption flow">
+      <rect class="bx-a" x="20" y="24" width="195" height="56" rx="8"/>
+      <text class="tx" x="117" y="46" text-anchor="middle">Customer</text>
+      <text class="tx-s" x="117" y="64" text-anchor="middle">opens one-click checkout</text>
+      <rect class="bx" x="240" y="24" width="195" height="56" rx="8"/>
+      <text class="tx" x="337" y="46" text-anchor="middle">GoKwik</text>
+      <text class="tx-s" x="337" y="64" text-anchor="middle">queries wallet · shared secret</text>
+      <rect class="bx-a" x="460" y="24" width="195" height="56" rx="8"/>
+      <text class="tx" x="557" y="46" text-anchor="middle">Divine Points</text>
+      <text class="tx-s" x="557" y="64" text-anchor="middle">returns redeemable amount</text>
+      <rect class="bx" x="680" y="24" width="200" height="56" rx="8"/>
+      <text class="tx" x="780" y="46" text-anchor="middle">Customer applies</text>
+      <text class="tx-s" x="780" y="64" text-anchor="middle">coins + pays prepaid</text>
 
-      <rect class="bx" x="60" y="110" width="330" height="140" rx="10"/>
-      <text class="tx" x="225" y="136" text-anchor="middle">Reviews application</text>
-      <rect class="bx-a" x="90" y="152" width="120" height="44" rx="7"/>
-      <text class="tx-s" x="150" y="178" text-anchor="middle">own backend</text>
-      <rect class="bx-a" x="240" y="152" width="120" height="44" rx="7"/>
-      <text class="tx-s" x="300" y="178" text-anchor="middle">own admin</text>
-      <text class="tx-s" x="225" y="222" text-anchor="middle">capture · moderation · display</text>
+      <path class="ar" d="M215 52 H240 M435 52 H460 M655 52 H680"/>
+      <path class="ar" d="M780 80 V108 H117 V140"/>
 
-      <rect class="bx" x="510" y="110" width="330" height="140" rx="10"/>
-      <text class="tx" x="675" y="136" text-anchor="middle">Loyalty application</text>
-      <rect class="bx-a" x="540" y="152" width="120" height="44" rx="7"/>
-      <text class="tx-s" x="600" y="178" text-anchor="middle">own backend</text>
-      <rect class="bx-a" x="690" y="152" width="120" height="44" rx="7"/>
-      <text class="tx-s" x="750" y="178" text-anchor="middle">own admin</text>
-      <text class="tx-s" x="675" y="222" text-anchor="middle">earning · tiers · redemption</text>
+      <rect class="bx" x="20" y="140" width="195" height="56" rx="8"/>
+      <text class="tx" x="117" y="162" text-anchor="middle">Shopify order</text>
+      <text class="tx-s" x="117" y="180" text-anchor="middle">wallet amount on the order</text>
+      <rect class="bx" x="240" y="140" width="195" height="56" rx="8"/>
+      <text class="tx" x="337" y="162" text-anchor="middle">orders/paid webhook</text>
+      <text class="tx-s" x="337" y="180" text-anchor="middle">HMAC verified</text>
+      <rect class="bx-a" x="460" y="140" width="195" height="56" rx="8"/>
+      <text class="tx" x="557" y="162" text-anchor="middle">Settle the ledger</text>
+      <text class="tx-s" x="557" y="180" text-anchor="middle">deduct FIFO · credit cashback</text>
+      <rect class="bx-a" x="680" y="140" width="200" height="56" rx="8"/>
+      <text class="tx" x="780" y="162" text-anchor="middle">WhatsApp</text>
+      <text class="tx-s" x="780" y="180" text-anchor="middle">confirmation to the customer</text>
 
-      <path class="ar" d="M400 60 H300 V110"/>
-      <path class="ar" d="M500 60 H600 V110"/>
+      <path class="ar" d="M215 168 H240 M435 168 H460 M655 168 H680"/>
+      <text class="tx-s" x="450" y="228" text-anchor="middle">coins are settled from the paid order, never trusted from the checkout UI</text>
     </svg>
-    <figcaption>Two independent applications. Separate backends, separate admins, deployed and versioned on their own.</figcaption>
+    <figcaption>Redemption is settled from the order webhook, idempotent per order — so the ledger can't be gamed from the client.</figcaption>
   </figure>
 
+  <h3>What makes it correct</h3>
+  <ul>
+    <li><strong>Every surface is separately authenticated.</strong> Four of them: the storefront API behind
+      Shopify's signed App Proxy, a shared-secret wallet API for GoKwik, a shared-secret events API, and
+      HMAC-verified Shopify webhooks — plus an admin portal on its own key. Secret comparisons are timing-safe.</li>
+    <li><strong>Idempotency everywhere.</strong> A unique <code>order_id</code> on credits, <code>checkout_id</code>
+      on redemptions, per-event keys on bonuses. Webhook retries can't double-credit or double-deduct.</li>
+    <li><strong>Precise restores.</strong> Each earn event is a lot with its own remaining balance and expiry; a
+      redemption records the exact lots it consumed, so a refund restores the right coins to the right lots
+      rather than approximating.</li>
+    <li><strong>Self-healing.</strong> A pending redemption auto-restores after a TTL if the checkout is
+      abandoned. The cart-drawer path issues a one-time discount code with the same server-side cap and the same
+      auto-restore.</li>
+    <li><strong>One identity.</strong> Phone numbers are normalised to E.164 with a one-time backfill migration,
+      so web, app and checkout resolve to a single wallet.</li>
+    <li><strong>Fraud caps.</strong> Issuance caps and registration/device checks flag or block abnormal credit
+      activity, with an append-only transaction log behind everything.</li>
+  </ul>
+
+  <p>
+    Alongside it I built the <strong>in-house reviews application</strong> — a separate service with its own
+    backend and admin — replacing the second paid app. Between them they removed over US$1,000 a month of
+    subscription cost and the third-party scripts that came with it.
+  </p>
+
   <div class="shots">
-    <figure class="shot"><img src="images/reviews-loyalty/01-reviews-widget.jpg" alt="Reviews widget"><div class="cap">Storefront review widget</div></figure>
-    <figure class="shot"><img src="images/reviews-loyalty/02-reviews-admin.png" alt="Reviews admin"><div class="cap">Moderation queue</div></figure>
-    <figure class="shot"><img src="images/reviews-loyalty/03-loyalty-admin.png" alt="Loyalty admin"><div class="cap">Loyalty rules and tiers</div></figure>
-    <figure class="shot"><img src="images/reviews-loyalty/04-loyalty-widget.png" alt="Loyalty panel"><div class="cap">Customer loyalty panel</div></figure>
+    <figure class="shot"><img src="images/divine-points/01-admin.png" alt="Loyalty admin"><div class="cap">Merchant admin — rules, slabs and caps</div></figure>
+    <figure class="shot"><img src="images/divine-points/02-storefront-widget.png" alt="Storefront widget"><div class="cap">Storefront widget — balance and redeem box</div></figure>
+    <figure class="shot"><img src="images/divine-points/03-checkout-redeem.png" alt="Checkout redemption"><div class="cap">Redemption inside one-click checkout</div></figure>
+    <figure class="shot"><img src="images/reviews-app/01-storefront-widget.jpg" alt="Reviews widget"><div class="cap">In-house reviews app on the storefront</div></figure>
+  </div>
+</article>
+
+<article class="case">
+  <div class="case-top">
+    <h2>Divine Hindu super-app — commerce, astrology and AR in one</h2>
+    <span class="meta">Architect &amp; engineer · live on the Play Store</span>
+  </div>
+  <div class="tags">
+    <span class="tag">React Native 0.86</span><span class="tag">Expo 57</span><span class="tag">TypeScript</span>
+    <span class="tag">ViroReact · AR</span><span class="tag">Shopify Storefront API</span>
+    <span class="tag">Checkout Sheet Kit</span><span class="tag">Node.js microservices</span>
+    <span class="tag">Azure</span><span class="tag plain">EAS Build + OTA</span>
+  </div>
+
+  <div class="stats" style="margin:0 0 26px">
+    <div class="stat"><div class="v">3</div><div class="l">Surfaces sharing one identity and one wallet</div></div>
+    <div class="stat"><div class="v">Offline</div><div class="l">Full Vedic astrology engine, on-device</div></div>
+    <div class="stat"><div class="v">5</div><div class="l">Single-purpose backend services</div></div>
+    <div class="stat"><div class="v">OTA</div><div class="l">Logic and content ship without a store review</div></div>
+  </div>
+
+  <div class="split">
+    <div>
+      <h4>What it is</h4>
+      <p>
+        Three things that normally live in separate apps, stitched into one: authentic devotional
+        <strong>shopping</strong>, a full <strong>Vedic astrology suite</strong> that runs entirely on the
+        device, and <strong>guided devotion</strong> — AR pooja, daily rituals, live astrologer chat. It shares
+        catalogue, customers and loyalty wallet with the Shopify storefront, so a customer is the same person
+        everywhere.
+      </p>
+    </div>
+    <div>
+      <h4>The design spine</h4>
+      <p>
+        <strong>The phone number is the identity.</strong> OTP login in the app and KwikPass on the web both
+        resolve to the same E.164 number, which keys the loyalty wallet and the consultation wallet. Shopify
+        stays the system of record for catalogue, orders and customers; everything else integrates around it
+        rather than duplicating it.
+      </p>
+    </div>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 900 400" role="img" aria-label="Divine Hindu super-app architecture">
+      <rect class="bx-a" x="60" y="20" width="260" height="58" rx="8"/>
+      <text class="tx" x="190" y="43" text-anchor="middle">React Native app</text>
+      <text class="tx-s" x="190" y="61" text-anchor="middle">Expo · iOS + Android</text>
+      <rect class="bx-a" x="580" y="20" width="260" height="58" rx="8"/>
+      <text class="tx" x="710" y="43" text-anchor="middle">Shopify storefront</text>
+      <text class="tx-s" x="710" y="61" text-anchor="middle">Liquid theme</text>
+
+      <rect class="bx" x="60" y="112" width="260" height="58" rx="8"/>
+      <text class="tx" x="190" y="135" text-anchor="middle">On-device astrology engine</text>
+      <text class="tx-s" x="190" y="153" text-anchor="middle">VSOP87 / ELP · no server, no signal</text>
+
+      <rect class="bx" x="380" y="112" width="150" height="58" rx="8"/>
+      <text class="tx" x="455" y="135" text-anchor="middle">Shopify APIs</text>
+      <text class="tx-s" x="455" y="153" text-anchor="middle">Storefront · Admin</text>
+      <rect class="bx" x="580" y="112" width="260" height="58" rx="8"/>
+      <text class="tx" x="710" y="135" text-anchor="middle">GoKwik</text>
+      <text class="tx-s" x="710" y="153" text-anchor="middle">KwikPass OTP · KwikCheckout</text>
+
+      <rect class="bx" x="40" y="210" width="820" height="112" rx="10"/>
+      <text class="tx-s" x="56" y="230">Azure microservices · Node.js</text>
+      <rect class="bx-a" x="56" y="242" width="150" height="62" rx="7"/>
+      <text class="tx" x="131" y="266" text-anchor="middle">App backend</text>
+      <text class="tx-s" x="131" y="284" text-anchor="middle">OTP · bookings</text>
+      <rect class="bx-a" x="220" y="242" width="150" height="62" rx="7"/>
+      <text class="tx" x="295" y="266" text-anchor="middle">Directus</text>
+      <text class="tx-s" x="295" y="284" text-anchor="middle">CMS · remote config</text>
+      <rect class="bx-a" x="384" y="242" width="150" height="62" rx="7"/>
+      <text class="tx" x="459" y="266" text-anchor="middle">Jyotish</text>
+      <text class="tx-s" x="459" y="284" text-anchor="middle">astrologer chat · wallet</text>
+      <rect class="bx-a" x="548" y="242" width="150" height="62" rx="7"/>
+      <text class="tx" x="623" y="266" text-anchor="middle">Pandit Ji</text>
+      <text class="tx-s" x="623" y="284" text-anchor="middle">AI chatbot</text>
+      <rect class="bx-a" x="712" y="242" width="132" height="62" rx="7"/>
+      <text class="tx" x="778" y="266" text-anchor="middle">Divine Points</text>
+      <text class="tx-s" x="778" y="284" text-anchor="middle">loyalty ledger</text>
+
+      <rect class="bx" x="360" y="348" width="180" height="42" rx="8"/>
+      <text class="tx" x="450" y="374" text-anchor="middle">WhatsApp</text>
+
+      <path class="ar" d="M190 78 V112"/>
+      <path class="ar" d="M320 49 H380 V112"/>
+      <path class="ar" d="M710 78 V112"/>
+      <path class="ar" d="M190 170 V210 M455 170 V210 M710 170 V210"/>
+      <path class="ar" d="M459 304 V348 M778 304 V330 H540 V348"/>
+    </svg>
+    <figcaption>Two client surfaces, one Shopify system of record, five single-purpose services. The astrology engine runs on the device.</figcaption>
+  </figure>
+
+  <h3>The parts worth talking about</h3>
+  <ul>
+    <li><strong>A self-contained Vedic astrology engine.</strong> Planetary positions from VSOP87 for planets and
+      ELP for the moon, with ΔT and nutation tables, ayanamsa, house systems, KP sub-lords, vargas, ashtakvarga,
+      dasha timelines and guna-milan — all in TypeScript, executed on the device. No astrology API dependency,
+      zero latency, and it works without a signal.</li>
+    <li><strong>AR that actually ships.</strong> ViroReact integrated through an Expo config plugin, degrading
+      gracefully where the native module isn't available and running fully in EAS builds. Place a deity via the
+      camera, follow a guided ritual, capture a darshan card.</li>
+    <li><strong>Checkout that stays native.</strong> Shopify's Checkout Sheet Kit keeps payment in a first-class
+      sheet instead of bouncing out to a browser, with completion callbacks that reconcile the cart.</li>
+    <li><strong>Re-skinnable by config.</strong> Branding, theme, navigation tabs, home layout and service URLs
+      are driven by a config file plus environment, so the same codebase can front a different store.</li>
+    <li><strong>Continuous delivery.</strong> Native binaries through EAS Build; content and logic pushed
+      over-the-air, so a fix doesn't wait on an app-store review.</li>
+  </ul>
+
+  <div class="shots">
+    <figure class="shot"><img src="images/super-app/01-home.png" alt="App home"><div class="cap">App home — shop and devotion in one</div></figure>
+    <figure class="shot"><img src="images/super-app/02-astrology.png" alt="Astrology"><div class="cap">On-device Kundli and Panchang</div></figure>
+    <figure class="shot"><img src="images/super-app/03-ar-pooja.png" alt="AR pooja"><div class="cap">AR pooja via the camera</div></figure>
+    <figure class="shot"><img src="images/super-app/04-jyotish.png" alt="Jyotish Live"><div class="cap">Jyotish Live — astrologer consultations</div></figure>
   </div>
 </article>
 
@@ -423,175 +570,559 @@ footer a{color:var(--text-2)}
 <!-- AI ENGINE -->
 <article class="case">
   <div class="case-top">
-    <h2>AI astrology engine &amp; report generator</h2>
-    <span class="meta">Architect &amp; engineer · 16 products live · <a href="https://www.divinehindu.in/pages/services" target="_blank" rel="noopener">services ↗</a></span>
+    <h2>Astrology report &amp; lead-delivery platform</h2>
+    <span class="meta">Architect &amp; engineer · live in production · <a href="https://www.divinehindu.in/pages/services" target="_blank" rel="noopener">services ↗</a></span>
   </div>
   <div class="tags">
-    <span class="tag">LLM orchestration</span><span class="tag">Multi-agent</span><span class="tag">Prompt engineering</span>
-    <span class="tag">Automated report generation</span><span class="tag plain">Async pipeline</span>
+    <span class="tag">Python 3.12 / FastAPI</span><span class="tag">Node.js / Express</span><span class="tag">Swiss Ephemeris</span>
+    <span class="tag">ReportLab</span><span class="tag">SQLite</span><span class="tag">Shopify Admin GraphQL</span>
+    <span class="tag">WhatsApp Business Platform</span><span class="tag">Azure App Service</span><span class="tag plain">GitHub Actions</span>
   </div>
 
   <div class="stats" style="margin:0 0 26px">
-    <div class="stat"><div class="v">30+</div><div class="l">Domain-tuned AI astrologers</div></div>
-    <div class="stat"><div class="v">120+</div><div class="l">Pages per generated report</div></div>
-    <div class="stat"><div class="v">&lt; 24 h</div><div class="l">Order to delivered report</div></div>
-    <div class="stat"><div class="v">16</div><div class="l">Report products live, from ₹299</div></div>
+    <div class="stat"><div class="v">30+</div><div class="l">AI astrologers, each tuned to a service</div></div>
+    <div class="stat"><div class="v">120+</div><div class="l">Pages in the paid report</div></div>
+    <div class="stat"><div class="v">~30 min</div><div class="l">Checkout to delivery, no human step</div></div>
+    <div class="stat"><div class="v">2</div><div class="l">Interchangeable delivery transports</div></div>
   </div>
 
   <div class="split">
     <div>
-      <h4>The problem</h4>
+      <h4>What it does</h4>
       <p>
-        Personalised astrology readings are valuable to the customer and unscalable by hand — a human
-        astrologer takes days over one detailed report, and the business needed to sell them from ₹299 with a
-        24-hour promise. One general-purpose prompt doesn't get there either: a single model asked to cover
-        every service produces output that drifts and doesn't hold to the tradition each service is sold under.
+        Two tiers, two pipelines, one core. The <strong>free 2-page Kundali</strong> is the lead magnet — real
+        chart data computed from ephemeris, not templated text. The <strong>paid tier</strong> is a
+        <strong>120+ page personalised report</strong> written by a roster of <strong>30+ AI astrologers</strong>,
+        each tuned to a distinct service, generated and delivered automatically about thirty minutes after
+        checkout. Both tiers share the chart engine, the PDF renderer and the delivery layer.
       </p>
     </div>
     <div>
-      <h4>The constraints</h4>
+      <h4>Why two services</h4>
+      <p>
+        The chart and PDF engine is Python — Swiss Ephemeris and ReportLab have no real equivalent elsewhere.
+        The commerce and messaging automation is Node, which was already handling conversational flows. They
+        integrate over HTTP behind a shared admin token rather than being merged: different runtimes,
+        different scaling characteristics, independent deploys.
+      </p>
+    </div>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 900 430" role="img" aria-label="Astrology platform architecture">
+      <rect class="bx-a" x="12" y="60" width="130" height="48" rx="8"/>
+      <text class="tx" x="77" y="80" text-anchor="middle">Lead form</text>
+      <text class="tx-s" x="77" y="97" text-anchor="middle">website popup</text>
+
+      <rect class="bx-a" x="12" y="322" width="130" height="48" rx="8"/>
+      <text class="tx" x="77" y="342" text-anchor="middle">Storefront</text>
+      <text class="tx-s" x="77" y="359" text-anchor="middle">paid orders</text>
+
+      <rect class="bx" x="180" y="20" width="390" height="250" rx="10"/>
+      <text class="tx-s" x="196" y="40">Astrology backend · FastAPI</text>
+      <rect class="bx-a" x="196" y="55" width="160" height="46" rx="7"/>
+      <text class="tx" x="276" y="74" text-anchor="middle">Intake</text>
+      <text class="tx-s" x="276" y="91" text-anchor="middle">append-only JSONL</text>
+      <rect class="bx-a" x="196" y="118" width="160" height="46" rx="7"/>
+      <text class="tx" x="276" y="137" text-anchor="middle">Worker thread</text>
+      <text class="tx-s" x="276" y="154" text-anchor="middle">single writer</text>
+      <rect class="bx" x="196" y="181" width="160" height="46" rx="7"/>
+      <text class="tx" x="276" y="200" text-anchor="middle">leads.db</text>
+      <text class="tx-s" x="276" y="217" text-anchor="middle">isolated SQLite</text>
+
+      <rect class="bx" x="386" y="55" width="168" height="46" rx="7"/>
+      <text class="tx" x="470" y="74" text-anchor="middle">Chart engine</text>
+      <text class="tx-s" x="470" y="91" text-anchor="middle">Swiss Ephemeris · Lahiri</text>
+      <rect class="bx" x="386" y="118" width="168" height="46" rx="7"/>
+      <text class="tx" x="470" y="137" text-anchor="middle">LLM narrative</text>
+      <text class="tx-s" x="470" y="154" text-anchor="middle">deterministic fallback</text>
+      <rect class="bx" x="386" y="181" width="168" height="46" rx="7"/>
+      <text class="tx" x="470" y="200" text-anchor="middle">PDF renderer</text>
+      <text class="tx-s" x="470" y="217" text-anchor="middle">separate subprocess</text>
+
+      <rect class="bx" x="180" y="300" width="390" height="95" rx="10"/>
+      <text class="tx-s" x="196" y="320">Order automation · Node.js</text>
+      <rect class="bx-a" x="196" y="332" width="160" height="46" rx="7"/>
+      <text class="tx" x="276" y="351" text-anchor="middle">Order sweep</text>
+      <text class="tx-s" x="276" y="368" text-anchor="middle">30s tick · tag-driven</text>
+      <rect class="bx" x="386" y="332" width="168" height="46" rx="7"/>
+      <text class="tx" x="470" y="351" text-anchor="middle">Backlog replay</text>
+      <text class="tx-s" x="470" y="368" text-anchor="middle">resend from stored URLs</text>
+
+      <rect class="bx-a" x="620" y="100" width="150" height="46" rx="7"/>
+      <text class="tx" x="695" y="119" text-anchor="middle">BSP gateway</text>
+      <rect class="bx-a" x="620" y="160" width="150" height="46" rx="7"/>
+      <text class="tx" x="695" y="179" text-anchor="middle">Meta Cloud API</text>
+
+      <rect class="bx-a" x="620" y="250" width="150" height="50" rx="8"/>
+      <text class="tx" x="695" y="270" text-anchor="middle">Customer</text>
+      <text class="tx-s" x="695" y="288" text-anchor="middle">WhatsApp</text>
+
+      <rect class="bx" x="620" y="332" width="150" height="46" rx="7"/>
+      <text class="tx" x="695" y="351" text-anchor="middle">Status callback</text>
+      <text class="tx-s" x="695" y="368" text-anchor="middle">delivery confirmation</text>
+
+      <path class="ar" d="M142 84 H196"/>
+      <path class="ar" d="M142 346 H196"/>
+      <path class="ar" d="M276 101 V118"/>
+      <path class="ar" d="M276 164 V181"/>
+      <path class="ar" d="M356 141 H386 V101 M386 141 H370"/>
+      <path class="ar" d="M470 101 V118 M470 164 V181"/>
+      <path class="ar" d="M554 204 H592 V123 H620 M592 204 V183 H620"/>
+      <path class="ar" d="M356 355 H386"/>
+      <path class="ar" d="M554 355 H575 V196 H620"/>
+      <path class="ar" d="M695 206 V250"/>
+      <path class="ar" d="M695 300 V332"/>
+      <path class="ar" d="M695 378 V412 H276 V227"/>
+    </svg>
+    <figcaption>Two services, one chart-and-PDF core, two interchangeable WhatsApp transports. Delivery confirmation flows back into the database — it is never inferred.</figcaption>
+  </figure>
+
+  <h3>Pipeline 1 — free Kundali, the lead magnet</h3>
+  <p>
+    A visitor submits name, gender, birth date, time and place, and a WhatsApp number. Within minutes they get
+    a 2-page chart PDF: a North-Indian Lagna chart with all twelve bhavas, Moon sign, Nakshatra, Ascendant,
+    ruling planet, Nakshatra lord and current Mahadasha on page one; narrative highlights, dasha meaning,
+    remedies keyed to the dasha lord, three product recommendations and a CTA on page two.
+  </p>
+  <p>
+    Two decisions in that path matter more than they look. <strong>The HTTP request never touches the
+    database</strong> — it appends a line to a JSONL inbox and returns, so a burst of form submissions can't
+    contend on SQLite. And <strong>field mapping is alias-tolerant</strong>: the upstream form is edited by
+    non-engineers and field names drift, so keys are normalised before matching rather than assumed.
+  </p>
+
+  <h3>Pipeline 2 — the paid report</h3>
+  <p>
+    The paid report is the detailed product — 120+ pages, drawing on the astrologer roster for the service the
+    customer bought. Delivery runs as a two-phase sweep on a 30-second tick, driven entirely by order tags
+    rather than a queue table:
+  </p>
+  <ul>
+    <li><strong>Generate</strong> at 28 minutes — pull birth details from line-item properties, call the chart
+      API per report type, write the PDF URLs into the order note, tag <code>report-ready</code>.</li>
+    <li><strong>Deliver</strong> at 30 minutes — parse those URLs, send each as a WhatsApp document template,
+      tag <code>report-sent</code> or <code>report-wa-failed</code>.</li>
+    <li><strong>Recover</strong> on demand — a <code>report-resend</code> tag re-sends from the already-stored
+      URLs without regenerating anything. The trigger tag is removed <em>before</em> sending, so overlapping
+      ticks can never double-send.</li>
+  </ul>
+  <p>
+    Tags rather than a queue because the storefront is already the source of truth for orders: tags are
+    transactional, visible to non-engineers in the admin, and survive any redeploy of the worker. Missing birth
+    details short-circuit to a pending state and trigger an automated WhatsApp request to the customer, rather
+    than failing quietly.
+  </p>
+
+  <h3>The failure worth reading about</h3>
+  <p>
+    The messaging gateway returned <strong>HTTP 200</strong> for template sends that WhatsApp later rejected
+    asynchronously. The code treated 200 as success and marked records <code>sent</code>; the order automation
+    then tagged orders <code>report-sent</code>. <strong>Every template send failed for over a month while every
+    internal signal — database rows, order tags, dashboards — reported success.</strong>
+  </p>
+  <p>
+    It surfaced only on reading the provider's own message logs, where the message bodies still contained raw
+    <code>{{1}}</code> placeholders: the gateway was accepting the request and silently discarding the template
+    parameters. What I fixed, in order of importance:
+  </p>
+  <ul>
+    <li><strong>An acknowledgement is not a delivery.</strong> 200 now means <em>submitted</em> and nothing more.</li>
+    <li><strong>A delivery-status webhook</strong> resolves <em>submitted</em> into <em>delivered</em> or
+      <em>failed</em> using the provider's own callbacks.</li>
+    <li><strong>A reconciliation sweep</strong> requeues anything still unconfirmed after a grace window, so
+      nothing sits in limbo indefinitely.</li>
+    <li><strong>Provider message IDs captured on every send</strong>, so a callback can be matched back to a customer.</li>
+    <li><strong>Failure counters and a <code>degraded</code> flag</strong> on a health endpoint — a stalled
+      pipeline is now one HTTP request away from visible, instead of invisible for a month.</li>
+  </ul>
+  <p>
+    The rewrite also made the transport swappable: the BSP gateway and Meta's Cloud API are both supported and
+    selected at runtime by which credentials are present, with automatic fallback. A vendor problem is now a
+    configuration change rather than a code change.
+  </p>
+
+  <figure>
+    <svg viewBox="0 0 900 250" role="img" aria-label="Delivery state machine">
+      <rect class="bx-a" x="70" y="80" width="140" height="52" rx="9"/>
+      <text class="tx" x="140" y="105" text-anchor="middle">pending</text>
+      <text class="tx-s" x="140" y="122" text-anchor="middle">queued to send</text>
+
+      <rect class="bx-a" x="360" y="80" width="150" height="52" rx="9"/>
+      <text class="tx" x="435" y="105" text-anchor="middle">submitted</text>
+      <text class="tx-s" x="435" y="122" text-anchor="middle">provider accepted</text>
+
+      <rect class="bx-a" x="670" y="80" width="150" height="52" rx="9"/>
+      <text class="tx" x="745" y="105" text-anchor="middle">delivered</text>
+      <text class="tx-s" x="745" y="122" text-anchor="middle">the only success state</text>
+
+      <rect class="bx" x="360" y="185" width="150" height="46" rx="9"/>
+      <text class="tx" x="435" y="213" text-anchor="middle">failed</text>
+
+      <path class="ar" d="M210 106 H360"/>
+      <text class="tx-s" x="285" y="98" text-anchor="middle">2xx + message id</text>
+
+      <path class="ar" d="M510 106 H670"/>
+      <text class="tx-s" x="590" y="98" text-anchor="middle">callback confirms</text>
+
+      <path class="ar" d="M435 80 V50 H140 V80"/>
+      <text class="tx-s" x="288" y="42" text-anchor="middle">callback says failed · or unconfirmed past grace window → requeue</text>
+
+      <path class="ar" d="M360 208 H210 V132"/>
+      <text class="tx-s" x="285" y="228" text-anchor="middle">manual or bulk requeue</text>
+
+      <path class="ar" d="M400 132 V185"/>
+      <text class="tx-s" x="352" y="168" text-anchor="middle">rejected</text>
+    </svg>
+    <figcaption><code>delivered</code> is the only success state, and only an external confirmation can set it. Attempts are bounded so a permanently bad recipient can't loop forever.</figcaption>
+  </figure>
+
+  <h3>Three more production lessons</h3>
+  <ul>
+    <li><strong>SQLite write contention on network-backed storage.</strong> WAL mode is ineffective on the
+      PaaS host's networked filesystem, so concurrent writes produced <code>database is locked</code> under
+      real traffic. Fixed in three layers: the JSONL inbox keeps the request path off SQLite entirely, leads
+      moved to their own database with exactly one writer, and the remaining paths retry on lock.</li>
+    <li><strong>CPU-bound rendering froze the event loop.</strong> PDF generation holds the GIL, so health
+      checks and every endpoint timed out during a render. Rendering moved to a subprocess —
+      <code>subprocess.run</code> releases the GIL while waiting — with an in-process fallback so a rendering
+      environment problem degrades rather than breaks.</li>
+    <li><strong>Background workers on a PaaS host.</strong> A fork-based daemon silently never ran under the
+      platform's process model. A plain daemon thread runs reliably, publishes a heartbeat, and the health
+      endpoint reports its age — a dead worker is now detectable rather than merely quiet.</li>
+  </ul>
+
+  <h4>What I'd do differently</h4>
+  <p>
+    I chased two plausible root causes before reading the provider's raw message log, which contained the
+    answer in plain sight. Cheap observation beats expensive inference — look at the actual bytes on the wire
+    first.
+  </p>
+
+  <div class="shots">
+    <figure class="shot"><img src="images/ai-engine/01-astrologer-dashboard.png" alt="Admin dashboard"><div class="cap">Admin dashboard — lead states and delivery</div></figure>
+    <figure class="shot"><img src="images/ai-engine/02-agent-config.png" alt="Diagnostics"><div class="cap">Diagnostics endpoint — heartbeat, backlog, counters</div></figure>
+    <figure class="shot"><img src="images/ai-engine/03-report-sample.png" alt="Report sample"><div class="cap">Generated Kundali PDF (sanitised)</div></figure>
+    <figure class="shot"><img src="images/ai-engine/04-order-flow.png" alt="Order pipeline"><div class="cap">Tag-driven order pipeline</div></figure>
+  </div>
+</article>
+
+<!-- MARG -->
+<article class="case">
+  <div class="case-top">
+    <h2>MARG — in-house shipping platform replacing a 3PL aggregator</h2>
+    <span class="meta">Architect &amp; engineer · Jul 2026 – ongoing · internal platform, walkthrough on request</span>
+  </div>
+  <div class="tags">
+    <span class="tag">TypeScript</span><span class="tag">Fastify</span><span class="tag">PostgreSQL · row-level security</span>
+    <span class="tag">Redis</span><span class="tag">Azure Container Apps</span><span class="tag">Bicep</span>
+    <span class="tag">Service Bus</span><span class="tag">Key Vault</span><span class="tag">GitHub Actions · OIDC</span>
+    <span class="tag plain">Python / pandas</span>
+  </div>
+
+  <div class="stats" style="margin:0 0 26px">
+    <div class="stat"><div class="v">1.17M</div><div class="l">Lifetime orders analysed to design the allocation model</div></div>
+    <div class="stat"><div class="v">31.8%</div><div class="l">Of parcels had no delivery confirmation at all</div></div>
+    <div class="stat"><div class="v">102</div><div class="l">Automated checks gating every deploy</div></div>
+    <div class="stat"><div class="v">~3 min</div><div class="l">git push to running in production</div></div>
+  </div>
+
+  <h4>The problem</h4>
+  <p>
+    Divine Hindu ships roughly <strong>700,000 parcels a year</strong> through a shipping aggregator that picks
+    the courier, holds the rate cards, owns the tracking feed, and bills a margin on top of the courier's own
+    rate. The store had already switched aggregators twice in three years, and each switch reset the data.
+  </p>
+  <p>
+    The specific failure that started this project: <strong>the courier's name is not in the order data.</strong>
+    Across three eras of the store's own records, 2023 wrote the real carrier, 2024 to early 2026 wrote the
+    <em>aggregator's</em> name on 100% of orders, and the current stack writes null on about 88%. There is no
+    courier dimension to query against, so it can't be recovered after the fact.
+  </p>
+  <p>
+    Which makes the most valuable operational question in the business — <strong>which courier actually
+    delivers best to this pincode?</strong> — unanswerable across 1.17 million orders. Meanwhile 222,719
+    parcels in twelve months carried no delivery confirmation of any kind. If even a third of those are genuine
+    returns, that's a seven-figure annual leak nobody can see, let alone attribute.
+  </p>
+
+  <div class="split">
+    <div>
+      <h4>Constraints</h4>
       <ul>
-        <li><strong>Per-service accuracy.</strong> A career reading and a kundli-matching reading follow
-          different rules and need different handling.</li>
-        <li><strong>Consistency across 120+ pages</strong> within a single report.</li>
-        <li><strong>A hard delivery window</strong> with no human in the loop.</li>
-        <li><strong>Non-technical control.</strong> Astrologers had to be added and tuned without a deploy.</li>
+        <li><strong>The courier field is permanently poisoned.</strong> No backfill exists, so identity has to be
+          recovered from data already present.</li>
+        <li><strong>Every Indian carrier models pickup differently</strong> — a registered warehouse name matched
+          byte-for-byte, a customer code plus origin area, a numeric ID. An origin isn't an address, it's a
+          per-carrier identifier.</li>
+      </ul>
+    </div>
+    <div>
+      <h4>&nbsp;</h4>
+      <ul>
+        <li><strong>Carriers push tracking to exactly one URL per customer.</strong> Cutover is a single switch
+          on their side, so the endpoint has to parse correctly <em>before</em> the switch — no staging to
+          rehearse in.</li>
+        <li><strong>Several carriers whitelist by IP</strong>, which forces a fixed egress address out of an
+          autoscaling platform.</li>
+        <li><strong>No downtime budget.</strong> The aggregator keeps running until each carrier is confirmed.</li>
       </ul>
     </div>
   </div>
 
-  <h3>What I built</h3>
-  <ul>
-    <li><strong>A custom admin dashboard controlling 30+ AI astrologers</strong>, each trained for a distinct
-      astrology service, with every control over the roster in one place.</li>
-    <li><strong>An automated report pipeline</strong> — a birth-chart order placed on the storefront is
-      computed and generated as a <strong>120+ page personalised report</strong>, then delivered to the
-      customer automatically <strong>within 24 hours</strong>, with nobody touching it in between.</li>
-    <li><strong>16 report products live</strong> on the storefront, from ₹299 — career, love, kundli matching,
-      finance, Sade Sati and a full lifeline report among them.</li>
-  </ul>
-
   <figure>
-    <svg viewBox="0 0 900 200" role="img" aria-label="AI report pipeline">
-      <rect class="bx-a" x="20" y="70" width="150" height="60" rx="8"/>
-      <text class="tx" x="95" y="95" text-anchor="middle">Order placed</text>
-      <text class="tx-s" x="95" y="113" text-anchor="middle">storefront</text>
+    <svg viewBox="0 0 900 530" role="img" aria-label="MARG platform architecture">
+      <text class="tx-s" x="20" y="16">INBOUND</text>
+      <rect class="bx-a" x="20" y="24" width="200" height="58" rx="8"/>
+      <text class="tx" x="120" y="47" text-anchor="middle">Shopify webhooks</text>
+      <text class="tx-s" x="120" y="65" text-anchor="middle">HMAC on raw bytes</text>
+      <rect class="bx-a" x="240" y="24" width="200" height="58" rx="8"/>
+      <text class="tx" x="340" y="47" text-anchor="middle">Carrier push</text>
+      <text class="tx-s" x="340" y="65" text-anchor="middle">one URL per account</text>
+      <rect class="bx-a" x="460" y="24" width="200" height="58" rx="8"/>
+      <text class="tx" x="560" y="47" text-anchor="middle">WhatsApp</text>
+      <text class="tx-s" x="560" y="65" text-anchor="middle">buyer replies · NDR ladder</text>
+      <rect class="bx-a" x="680" y="24" width="200" height="58" rx="8"/>
+      <text class="tx" x="780" y="47" text-anchor="middle">Ops console</text>
+      <text class="tx-s" x="780" y="65" text-anchor="middle">sessions · role checks</text>
 
-      <rect class="bx-a" x="240" y="70" width="180" height="60" rx="8"/>
-      <text class="tx" x="330" y="95" text-anchor="middle">Astrologer dashboard</text>
-      <text class="tx-s" x="330" y="113" text-anchor="middle">30+ tuned agents</text>
+      <path class="ar" d="M120 82 V104 M340 82 V104 M560 82 V104 M780 82 V104 M120 104 H780"/>
+      <text class="tx-s" x="450" y="118" text-anchor="middle">verify → acknowledge → then work</text>
 
-      <rect class="bx" x="490" y="70" width="180" height="60" rx="8"/>
-      <text class="tx" x="580" y="95" text-anchor="middle">Report generated</text>
-      <text class="tx-s" x="580" y="113" text-anchor="middle">120+ pages</text>
+      <text class="tx-s" x="20" y="140">COMPUTE · CONTAINER APPS</text>
+      <rect class="bx" x="20" y="148" width="273" height="58" rx="8"/>
+      <text class="tx" x="156" y="171" text-anchor="middle">API · Fastify</text>
+      <text class="tx-s" x="156" y="189" text-anchor="middle">2–8 replicas · tenant set per transaction</text>
+      <rect class="bx" x="313" y="148" width="273" height="58" rx="8"/>
+      <text class="tx" x="449" y="171" text-anchor="middle">Worker</text>
+      <text class="tx-s" x="449" y="189" text-anchor="middle">1–4 replicas · KEDA on queue depth</text>
+      <rect class="bx" x="606" y="148" width="274" height="58" rx="8"/>
+      <text class="tx" x="743" y="171" text-anchor="middle">Migration job</text>
+      <text class="tx-s" x="743" y="189" text-anchor="middle">runs inside the VNet</text>
 
-      <rect class="bx-a" x="740" y="70" width="140" height="60" rx="8"/>
-      <text class="tx" x="810" y="95" text-anchor="middle">Delivered</text>
-      <text class="tx-s" x="810" y="113" text-anchor="middle">&lt; 24 hours</text>
+      <path class="ar" d="M450 206 V228"/>
 
-      <path class="ar" d="M170 100 H240"/>
-      <path class="ar" d="M420 100 H490"/>
-      <path class="ar" d="M670 100 H740"/>
+      <text class="tx-s" x="20" y="248">DOMAIN</text>
+      <rect class="bx" x="20" y="256" width="200" height="62" rx="8"/>
+      <text class="tx" x="120" y="279" text-anchor="middle">AWB prefix registry</text>
+      <text class="tx-s" x="120" y="297" text-anchor="middle">carrier identity from</text>
+      <text class="tx-s" x="120" y="311" text-anchor="middle">the waybill format</text>
+      <rect class="bx" x="240" y="256" width="200" height="62" rx="8"/>
+      <text class="tx" x="340" y="279" text-anchor="middle">Status mapper</text>
+      <text class="tx-s" x="340" y="297" text-anchor="middle">11 statuses · 14 NDR reasons</text>
+      <text class="tx-s" x="340" y="311" text-anchor="middle">unknowns flagged, never dropped</text>
+      <rect class="bx" x="460" y="256" width="200" height="62" rx="8"/>
+      <text class="tx" x="560" y="279" text-anchor="middle">Warehouses</text>
+      <text class="tx-s" x="560" y="297" text-anchor="middle">one site, N carrier</text>
+      <text class="tx-s" x="560" y="311" text-anchor="middle">registrations · IST cut-offs</text>
+      <rect class="bx-a" x="680" y="256" width="200" height="62" rx="8"/>
+      <text class="tx" x="780" y="279" text-anchor="middle">Allocation engine</text>
+      <text class="tx-s" x="780" y="297" text-anchor="middle">chosen origin + every</text>
+      <text class="tx-s" x="780" y="311" text-anchor="middle">rejected one, with reason</text>
+
+      <path class="ar" d="M450 318 V340"/>
+      <text class="tx-s" x="450" y="334" text-anchor="middle">routes on declared capabilities, never on a carrier's name</text>
+
+      <text class="tx-s" x="20" y="360">CARRIER ADAPTERS</text>
+      <rect class="bx" x="20" y="368" width="200" height="54" rx="8"/>
+      <text class="tx" x="120" y="390" text-anchor="middle">Carrier A</text>
+      <text class="tx-s" x="120" y="408" text-anchor="middle">book + track · live</text>
+      <rect class="bx" x="240" y="368" width="200" height="54" rx="8"/>
+      <text class="tx" x="340" y="390" text-anchor="middle">Carrier B</text>
+      <text class="tx-s" x="340" y="408" text-anchor="middle">book + track · live</text>
+      <rect class="bx" x="460" y="368" width="200" height="54" rx="8"/>
+      <text class="tx" x="560" y="390" text-anchor="middle">Carrier C</text>
+      <text class="tx-s" x="560" y="408" text-anchor="middle">track live · booking pending</text>
+      <rect class="bx" x="680" y="368" width="200" height="54" rx="8"/>
+      <text class="tx" x="780" y="390" text-anchor="middle">+ next</text>
+      <text class="tx-s" x="780" y="408" text-anchor="middle">one file + a credential card</text>
+
+      <path class="ar" d="M450 422 V444"/>
+
+      <text class="tx-s" x="20" y="464">DATA &amp; PLATFORM</text>
+      <rect class="bx-a" x="20" y="472" width="200" height="50" rx="8"/>
+      <text class="tx" x="120" y="493" text-anchor="middle">PostgreSQL 17</text>
+      <text class="tx-s" x="120" y="510" text-anchor="middle">FORCE row-level security</text>
+      <rect class="bx-a" x="240" y="472" width="200" height="50" rx="8"/>
+      <text class="tx" x="340" y="493" text-anchor="middle">Service Bus</text>
+      <text class="tx-s" x="340" y="510" text-anchor="middle">duplicate detection</text>
+      <rect class="bx-a" x="460" y="472" width="200" height="50" rx="8"/>
+      <text class="tx" x="560" y="493" text-anchor="middle">Redis</text>
+      <text class="tx-s" x="560" y="510" text-anchor="middle">optional · degrades to Postgres</text>
+      <rect class="bx-a" x="680" y="472" width="200" height="50" rx="8"/>
+      <text class="tx" x="780" y="493" text-anchor="middle">Key Vault</text>
+      <text class="tx-s" x="780" y="510" text-anchor="middle">managed identity</text>
     </svg>
-    <figcaption>Order to delivered report, with no human step in between.</figcaption>
+    <figcaption>Five layers. A NAT gateway pins a static egress IP — the address carriers whitelist, and the only one permitted into Postgres.</figcaption>
   </figure>
 
-  <div class="shots">
-    <figure class="shot"><img src="images/ai-engine/01-astrologer-dashboard.png" alt="Astrologer dashboard"><div class="cap">Agent roster dashboard</div></figure>
-    <figure class="shot"><img src="images/ai-engine/02-agent-config.png" alt="Agent config"><div class="cap">Single agent configuration</div></figure>
-    <figure class="shot"><img src="images/ai-engine/03-report-sample.png" alt="Report sample"><div class="cap">Generated report (sanitised)</div></figure>
-    <figure class="shot"><img src="images/ai-engine/04-order-flow.png" alt="Pipeline view"><div class="cap">Order-to-delivery pipeline</div></figure>
-  </div>
-</article>
-
-<!-- COURIER -->
-<article class="case">
-  <div class="case-top">
-    <h2>Courier allocation engine — cutting return-to-origin</h2>
-    <span class="meta">Architect &amp; engineer · internal product</span>
-  </div>
-  <div class="tags">
-    <span class="tag">Geolocation</span><span class="tag">Carrier scoring</span><span class="tag">Order routing</span>
-    <span class="tag plain">Logistics</span>
-  </div>
-
-  <div class="stats" style="margin:0 0 26px">
-    <div class="stat"><div class="v">Per-pincode</div><div class="l">Granularity of carrier scoring</div></div>
-    <div class="stat"><div class="v">Automatic</div><div class="l">Carrier assigned at order creation</div></div>
-    <div class="stat"><div class="v">Self-tuning</div><div class="l">Scores update with every shipment</div></div>
-  </div>
-
-  <div class="split">
-    <div>
-      <h4>The problem</h4>
-      <p>
-        Indian COD commerce lives and dies on return-to-origin. Every shipment that comes back costs forward
-        freight, return freight and handling, and the margin on the ones that land has to cover all of it. RTO
-        isn't evenly distributed either — it clusters by pincode and by carrier, and a carrier that's excellent
-        in one district can be unreliable two districts over.
-      </p>
-    </div>
-    <div>
-      <h4>The insight</h4>
-      <p>
-        Most stores pick a courier by cost or by a fixed priority list. The more useful question is
-        <strong>who actually delivers successfully to this specific pincode</strong> — an empirical question
-        that past shipments already answer, if anyone is reading them.
-      </p>
-    </div>
-  </div>
-
   <h3>What I built</h3>
   <ul>
-    <li><strong>Geolocation capture on the storefront</strong> — the site requests the customer's location and
-      resolves it to a pincode before the carrier decision is made.</li>
-    <li><strong>Per-pincode carrier performance</strong> built from historical delivery outcomes, so each area
-      has its own picture of which partners actually perform there.</li>
-    <li><strong>Automatic assignment at order creation</strong>, mapping the resolved location to the
-      best-performing courier for it without anyone in operations touching the order.</li>
+    <li><strong>Carrier identity recovered from the AWB.</strong> Waybill formats are carrier-specific and fixed,
+      so a multi-resolution prefix registry — length plus the first <em>k</em> characters, most-specific proven
+      level wins — decodes the carrier from the tracking number itself. An early four-character version split one
+      national carrier into five phantom couriers with delivery rates from 32% to 97%; the registry now refuses
+      to guess below a proven confidence level rather than inventing a courier.</li>
+    <li><strong>A tracking model that discards nothing.</strong> Every scan maps into 11 canonical statuses and
+      14 NDR reason codes; anything unrecognised is stored raw and flagged rather than dropped. An early version
+      of my own mapper counted <em>out for delivery</em> as delivered because the rule was "contains deliver",
+      which inflated every courier's score. There's now a pinned test per carrier so it can't recur.</li>
+    <li><strong>Warehouse and carrier registration as first-class data.</strong> One physical warehouse, N carrier
+      registrations, each with its own state machine. A warehouse with no active registration cannot ship,
+      however complete its address looks. Changing a pincode is modelled as <em>recreate</em>, not edit, because
+      the carrier API can't do it.</li>
+    <li><strong>An allocation engine that explains itself.</strong> Given a destination pincode and payment mode
+      it returns the chosen origin, the zone, minutes remaining to cut-off — and every <em>rejected</em> origin
+      with the specific reason it lost. "Why did this ship from Gurugram again?" needed an answer you could
+      argue with.</li>
+    <li><strong>The platform.</strong> Infrastructure is all Bicep. Migrations run as a job inside the VNet, so
+      the database has no public firewall rule at all. Secrets live in Key Vault resolved by managed identity —
+      and the console <em>writes</em> there, so configuring a new carrier needs no redeploy and no terminal.</li>
   </ul>
 
-  <figure>
-    <svg viewBox="0 0 900 200" role="img" aria-label="Courier allocation flow">
-      <rect class="bx-a" x="20" y="70" width="160" height="60" rx="8"/>
-      <text class="tx" x="100" y="95" text-anchor="middle">Customer location</text>
-      <text class="tx-s" x="100" y="113" text-anchor="middle">geolocation request</text>
-
-      <rect class="bx" x="250" y="70" width="160" height="60" rx="8"/>
-      <text class="tx" x="330" y="95" text-anchor="middle">Pincode resolved</text>
-
-      <rect class="bx-a" x="480" y="70" width="170" height="60" rx="8"/>
-      <text class="tx" x="565" y="95" text-anchor="middle">Carrier scoring</text>
-      <text class="tx-s" x="565" y="113" text-anchor="middle">per-pincode history</text>
-
-      <rect class="bx-a" x="720" y="70" width="160" height="60" rx="8"/>
-      <text class="tx" x="800" y="95" text-anchor="middle">Best carrier</text>
-      <text class="tx-s" x="800" y="113" text-anchor="middle">assigned at order</text>
-
-      <path class="ar" d="M180 100 H250"/>
-      <path class="ar" d="M410 100 H480"/>
-      <path class="ar" d="M650 100 H720"/>
-      <path class="ar" d="M800 130 V170 H565 V130"/>
-      <text class="tx-s" x="680" y="188" text-anchor="middle">delivery outcome feeds back into scoring</text>
-    </svg>
-    <figcaption>Every completed shipment improves the next allocation decision.</figcaption>
-  </figure>
+  <h3>On correctness</h3>
+  <p>
+    Row-level security is the reason this has 102 automated checks rather than a smoke test. <strong>RLS fails
+    silently</strong> — without a tenant context every policy matches nothing and queries return zero rows, and
+    a superuser bypasses it entirely, so a passing local test proves nothing. The harness runs as a deliberately
+    non-superuser role and asserts isolation in both directions. It caught a real defect: <strong>37 call sites
+    querying the pool with no tenant context</strong>, which would have returned 403 on every authenticated
+    request in production, after a deployment that reported success.
+  </p>
+  <p>
+    Other checks earned their place the same way. Connection-pool arithmetic — 8 replicas × 3, plus 4 × 3, plus
+    1, is 37 against a ceiling of 50 — is asserted by a test, because a scale event that exhausts the pool is an
+    outage rather than a slowdown. Day boundaries are computed in IST, not UTC, so warehouse capacity doesn't
+    reset at 05:30. Every generated Azure resource name is measured against its length limit before deployment.
+  </p>
 
   <h4>Result</h4>
   <p>
-    Return-to-origin fell substantially after rollout. On a COD business this is among the highest-leverage
-    systems in the stack, because every avoided return is freight and handling that never gets spent — margin
-    recovered without selling anything more.
+    MARG is deployed and running in production. Carrier cutover is in progress: bookings and tracking work
+    end-to-end for one national carrier, a second adapter is complete, and a third parses tracking today while
+    its booking credentials clear. The aggregator stays live until each carrier is confirmed — no gap in
+    tracking is acceptable.
+  </p>
+  <p>
+    The analysis that justified the build is a result in itself. Controlling for the COD/prepaid mix
+    <strong>reversed the courier ranking</strong>: the carrier leading on aggregate delivery rate at 68%
+    finishes <strong>last on COD at 46.2%</strong>, while another is <strong>16.4 points better on COD</strong>
+    across every district tested. A textbook Simpson's paradox — and an allocation rule worth real money that
+    was invisible for as long as the courier field stayed blank.
   </p>
 
   <div class="shots">
-    <figure class="shot"><img src="images/courier/01-allocation-dashboard.png" alt="Allocation dashboard"><div class="cap">Carrier scoring dashboard</div></figure>
-    <figure class="shot"><img src="images/courier/02-pincode-map.png" alt="Pincode view"><div class="cap">Per-pincode performance</div></figure>
-    <figure class="shot"><img src="images/courier/03-rto-trend.png" alt="RTO trend"><div class="cap">RTO trend after rollout</div></figure>
+    <figure class="shot"><img src="images/marg/01-allocation-tester.png" alt="Allocation tester"><div class="cap">Allocation tester — chosen origin and every rejected one</div></figure>
+    <figure class="shot"><img src="images/marg/02-integrations.png" alt="Integrations"><div class="cap">Console — carrier credential cards</div></figure>
+    <figure class="shot"><img src="images/marg/03-warehouses.png" alt="Warehouses"><div class="cap">Console — per-carrier registration state</div></figure>
   </div>
 </article>
 
 </div></section>
+
+<!-- ADCOMPASS -->
+<article class="case">
+  <div class="case-top">
+    <h2>AdCompass — AI creative-intelligence SaaS for Meta advertisers</h2>
+    <span class="meta">Built and shipped solo · <a href="https://adcompass-web.gentlesand-4fd3435f.centralindia.azurecontainerapps.io" target="_blank" rel="noopener">live demo ↗</a></span>
+  </div>
+  <div class="tags">
+    <span class="tag">Next.js 15</span><span class="tag">TypeScript</span><span class="tag">Tailwind v4</span>
+    <span class="tag">PostgreSQL 16 + pgvector</span><span class="tag">Drizzle ORM</span>
+    <span class="tag">Provider-agnostic LLM adapter</span><span class="tag">Azure Container Apps</span>
+    <span class="tag">Bicep</span><span class="tag plain">Playwright E2E</span>
+  </div>
+
+  <div class="stats" style="margin:0 0 26px">
+    <div class="stat"><div class="v">12</div><div class="l">Dashboard modules</div></div>
+    <div class="stat"><div class="v">3</div><div class="l">Signal streams triangulated into one plan</div></div>
+    <div class="stat"><div class="v">0 keys</div><div class="l">Runs end-to-end fully mocked</div></div>
+    <div class="stat"><div class="v">Weekly</div><div class="l">Ranked test plan, evidence attached</div></div>
+  </div>
+
+  <div class="split">
+    <div>
+      <h4>The question it answers</h4>
+      <p>
+        Every growth team asks the same thing on Monday: <em>what should we test this week?</em> Most tools
+        answer with another dashboard. AdCompass is a decision engine — it triangulates competitor ads, customer
+        language and the brand's own performance into ranked recommendations with the evidence attached.
+      </p>
+    </div>
+    <div>
+      <h4>The insight it's built on</h4>
+      <p>
+        <strong>Winners hide in repetition.</strong> A concept a brand cuts into six ad variants is a far
+        stronger "this converts" signal than any single long-running ad. So ads are grouped into creative
+        clusters the way a professional strategist would, and winner detection scores repetition × duration ×
+        recency rather than raw spend or longevity alone.
+      </p>
+    </div>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 900 330" role="img" aria-label="AdCompass four-layer architecture">
+      <rect class="bx" x="60" y="16" width="780" height="58" rx="9"/>
+      <text class="tx" x="80" y="40">A · Data sources</text>
+      <text class="tx-s" x="80" y="60">Meta Marketing API · ad-library providers · reviews and forums · billing events — all behind swappable adapters</text>
+
+      <path class="ar" d="M450 74 V96"/>
+
+      <rect class="bx" x="60" y="96" width="780" height="58" rx="9"/>
+      <text class="tx" x="80" y="120">B · Ingestion &amp; enrichment</text>
+      <text class="tx-s" x="80" y="140">nightly jobs diff ads · video transcribed · creatives LLM-tagged against a zod-validated taxonomy · embedded into pgvector</text>
+
+      <path class="ar" d="M450 154 V176"/>
+
+      <rect class="bx-a" x="60" y="176" width="780" height="66" rx="9"/>
+      <text class="tx" x="80" y="200">C · Intelligence core</text>
+      <text class="tx-s" x="80" y="220">deterministic engines — fatigue rules, winner and virality scores, angle momentum, the test-plan ranker</text>
+      <text class="tx-s" x="80" y="236">Brand Brain RAG memory · strategist agent that retrieves before it answers, and cites what it used</text>
+
+      <path class="ar" d="M450 242 V264"/>
+
+      <rect class="bx" x="60" y="264" width="780" height="58" rx="9"/>
+      <text class="tx" x="80" y="288">D · Product surfaces</text>
+      <text class="tx-s" x="80" y="308">Next.js dashboard, 12 modules · Monday email plan · teardown reports · grounded chat · public SEO pages and free tools</text>
+    </svg>
+    <figcaption>Data flows down; every surface reads from the intelligence core rather than querying sources directly.</figcaption>
+  </figure>
+
+  <h3>What it does</h3>
+  <ul>
+    <li><strong>A ranked weekly test plan</strong> scored on momentum, account fit, novelty and what's already
+      been tried.</li>
+    <li><strong>Competitor strategy profiles</strong> — creative-type, hook and angle mixes, top creatives by
+      reuse, launch-batch activity reports.</li>
+    <li><strong>Targeting and campaign-structure inference</strong> with explicit confidence and the evidence
+      behind each verdict, rather than an unattributable guess.</li>
+    <li><strong>Influencer tracking</strong> with per-comment sentiment, and a client-side creative attention
+      heatmap with compare-image export.</li>
+    <li><strong>Brand Brain</strong> — a per-workspace memory of every experiment, so recommendations compound
+      for each customer instead of restarting.</li>
+  </ul>
+
+  <h3>The line between deterministic and generated</h3>
+  <p>
+    <strong>Everything numeric is computed deterministically</strong> — fatigue rules, winner scores, momentum.
+    The LLM layer interprets, classifies and writes; it never calculates. Classification is validated against a
+    fixed taxonomy with zod schemas, and the whole adapter is provider-agnostic and fully mockable, so
+    <strong>the entire product runs end-to-end with zero API keys</strong>. That's what makes the test suite
+    meaningful: the engines can be asserted against fixtures without a model in the loop.
+  </p>
+  <p>
+    It ships from a single Bicep template — Container Apps for the web tier, Container Apps Jobs for the nightly
+    cron work, Postgres Flexible Server, ACR and Log Analytics — with GitHub Actions building, migrating and
+    rolling both the web app and the jobs on every push.
+  </p>
+
+  <div class="shots">
+    <figure class="shot"><img src="images/adcompass/01-dashboard.png" alt="Dashboard"><div class="cap">Competitor creative clusters</div></figure>
+    <figure class="shot"><img src="images/adcompass/02-test-plan.png" alt="Test plan"><div class="cap">Weekly ranked test plan</div></figure>
+    <figure class="shot"><img src="images/adcompass/03-teardown.png" alt="Teardown"><div class="cap">Strategy teardown</div></figure>
+    <figure class="shot"><img src="images/adcompass/04-heatmap.png" alt="Heatmap"><div class="cap">Creative attention heatmap</div></figure>
+  </div>
+</article>
 
 <!-- ============ MORE ============ -->
 <section id="more"><div class="wrap">
