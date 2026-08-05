@@ -53,55 +53,86 @@ to ask first than to take it down after a competitor sees it. If the answer is n
 | `05-lighthouse.png` | **The single most valuable screenshot on the site.** Run Lighthouse mobile in Chrome DevTools on a product page, capture the score wheel with performance 90+. Include the URL so it's verifiable. |
 
 ### `images/reviews-app/`
-| File | What to capture |
+All six slots are filled with real screenshots. `02-moderation.jpg` has the four customer email
+addresses covered with solid boxes — if you ever re-shoot it, redact them again.
+
+| File | What it shows |
 |---|---|
-| `01-storefront-widget.jpg` | Storefront review widget with media reviews visible |
-| `02-admin.png` | Moderation queue — **redact customer names/emails or use dummy data** |
+| `01-storefront-widget.jpg` | The widget on a product page |
+| `02-moderation.jpg` | Moderation queue (emails redacted) |
+| `03-overview.jpg` | Overview dashboard |
+| `04-bulk-upload.jpg` | Bulk import |
+| `05-widget-designer.jpg` | Display rules + widget designer |
+| `06-add-review.jpg` | Manual review entry |
 
 ### `images/divine-points/`
-| File | What to capture |
+All six slots are filled with real screenshots. The browser chrome was cropped off `03` and `05` because it
+exposed the production hostname — if you re-shoot either, crop it again.
+
+| File | What it shows |
 |---|---|
-| `01-admin.png` | Merchant admin — earn slabs, caps, expiry rules |
-| `02-storefront-widget.png` | Storefront widget — balance chip and cart redeem box |
-| `03-checkout-redeem.png` | The redeem step inside GoKwik one-click checkout — **the distinctive one** |
+| `06-checkout-redeem.jpg` | Redemption inside GoKwik one-click checkout — **the distinctive one**, shown first in the grid |
+| `01-admin.jpg` | Program Flow — ways to earn / burn, referral |
+| `02-storefront-widget.jpg` | Storefront customiser with live widget preview |
+| `03-product-cashback.jpg` | Per-product / per-collection cashback overrides (hostname cropped) |
+| `04-whatsapp-triggers.jpg` | WhatsApp lifecycle triggers and template mapping |
+| `05-reports.jpg` | Finance reports and exports (hostname cropped) |
+
+On `06`, the live UPI payment QR is covered with a solid box and the browser tab bar is cropped. If you
+re-shoot it, do both again — a UPI QR encodes a payable intent and shouldn't be published.
 
 ### `images/super-app/`
-| File | What to capture |
-|---|---|
-| `01-home.png` | App home — shop and devotion surfaces together |
-| `02-astrology.png` | On-device Kundli or Panchang screen |
-| `03-ar-pooja.png` | AR pooja with a deity placed via the camera — **the most distinctive screen in the app** |
-| `04-jyotish.png` | Jyotish Live — astrologer profiles or chat |
+Phone screenshots are portrait, so they'd be badly cropped by the 16:10 grid. Each file here is a **composite**
+— two or three phone screens laid out side by side on a warm neutral canvas at 1600×1000.
 
-### `images/adcompass/`
-| File | What to capture |
+| File | What it shows |
 |---|---|
-| `01-dashboard.png` | Dashboard showing competitor creative clusters |
-| `02-test-plan.png` | The weekly ranked test plan with evidence attached — **the product's whole thesis in one screen** |
-| `03-teardown.png` | A strategy teardown or hooks analysis |
-| `04-heatmap.png` | Creative attention heatmap |
+| `01-home.jpg` | Home, home scrolled to Best Sellers, navigation drawer (account name and number covered) |
+| `02-jyotish.jpg` | Jyotish tab and the astrologer roster with consultation wallet |
+| `03-content.jpg` | CMS-driven Our Story page and the store locator |
+
+If you re-shoot any of these, keep the composite approach and cover the account name and phone number in the
+drawer again. Three further screens (the founder photos on Our Story, and the Moments of Devotion gallery)
+were left out because they show identifiable people — add them only if everyone pictured is fine with it.
 
 ### `images/ai-engine/`
-| File | What to capture |
-|---|---|
-| `01-astrologer-dashboard.png` | The roster view showing many agents at once — the "30+" claim made visible |
-| `02-agent-config.png` | One agent's configuration: persona, service, doctrinal constraints |
-| `03-report-sample.png` | A few pages of a generated report side by side, ideally showing the page count. **Use your own birth details or dummy data, never a customer's.** |
-| `04-order-flow.png` | Pipeline/queue status view showing orders moving through stages |
+Three slots filled with real screenshots of the Divine Jyotish dashboard.
 
-### `images/marg/`
-| File | What to capture |
+| File | What it shows |
 |---|---|
-| `01-allocation-tester.png` | **The most distinctive screen in the product** — chosen origin plus every rejected origin with its reason |
-| `02-integrations.png` | Console → Integrations, the carrier credential cards |
-| `03-warehouses.png` | Console → Warehouses, per-carrier registration state on a warehouse card |
+| `01-agents.jpg` | The agent roster — traditions, specialisms, languages |
+| `02-report-generator.jpg` | Kundli report generation and the delivery log — **the four report filenames are covered with solid boxes**; they contained customer names and share-link tokens, so redact again if re-shot |
+| `03-knowledge-base.jpg` | The shared knowledge base every agent reads from |
 
-**Crop or blur the production hostname in the browser bar on all three.**
+Still worth capturing: **one agent's edit-and-train screen**, which would show the persona and doctrinal
+constraints an individual agent runs under — the roster proves breadth, but not depth. And a couple of pages
+of a generated report side by side, using your own birth details or dummy data, never a customer's.
 
-### `images/public-app/`
-| File | What to capture |
+The roster shows six agents; the write-up claims 30+. Scroll the page and take a taller screenshot, or crop
+to a grid that clearly continues past the fold, so the number on the page and the number in the picture agree.
+
+### `images/public-app/` — ReviewMaster
+
+All six slots are filled with real screenshots of the ReviewMaster development store.
+
+| File | What it shows |
 |---|---|
-| `01-app-admin.png` | The embedded Polaris admin of the public app |
+| `01-app-admin.jpg` | Embedded dashboard (browser chrome cropped) |
+| `02-moderation.jpg` | All reviews — **two reviewer email addresses covered with solid boxes**, redact again if re-shot |
+| `03-incentives.jpg` | Incentive setup with the no-minimum-rating panel — the highest-value shot on the project |
+| `04-import.jpg` | Import sources and the provenance rules |
+| `05-widgets.jpg` | The nine widget layouts |
+| `06-settings.jpg` | Moderation, media and display settings |
+
+Two things to know before re-shooting. The screenshots come from a **development store**, so the reviews are
+test data and the `dev` badge is visible — that's honest for an app in review, but swap in a real merchant
+store once one is installed. And the Shopify sidebar shows **Judge.me installed alongside ReviewMaster**; it's
+harmless, and arguably good framing given the write-up names Judge.me as a competitor, but crop it if you'd
+rather not.
+
+Still worth capturing: the buyer-facing form at `/r/:token` on a phone mid-submission with a photo attached,
+and the widget rendering on a live product page. Those are the only two customer-facing surfaces the gallery
+doesn't show.
 
 ### `images/theme/`
 | File | What to capture |
@@ -126,14 +157,18 @@ to ask first than to take it down after a competitor sees it. If the answer is n
 
 ## Priority order
 
-If you only have an hour, do these five and publish — the rest can follow:
+Most galleries are now filled with real screenshots. What's left, in order of what it would prove:
 
-1. `divine-hindu/05-lighthouse.png` — proves the performance claim
-2. `marg/01-allocation-tester.png` — the most distinctive screen you have
-3. `divine-hindu/01-home.png` — proves the storefront is real and looks good
-4. `ai-engine/01-astrologer-dashboard.png` — proves the "30+ agents" claim
-5. `divine-hindu/03-cart-upsell.png` — proves custom cart work
+1. `divine-hindu/05-lighthouse.png` — the only hard evidence for the 60 → 90+ performance claim, and the
+   single most valuable screenshot still missing from the site
+2. A taller `ai-engine/01-agents.jpg` — the roster currently shows six agents against a "30+" claim
+3. The ReviewMaster buyer form at `/r/:token` on a phone, and the widget on a live product page
+4. `theme/`, `pujaghar/` and `shapify/` — still placeholders, and they're the images on the "Also shipped" cards
 
-A portfolio with six real screenshots and twenty-one placeholders is worse than one with six real screenshots
-and the rest of the slots deleted. If you're not going to fill a slot soon, delete that `<figure class="shot">`
-block from `index.html` rather than shipping a placeholder that says "REPLACE THIS FILE".
+A placeholder that says "REPLACE THIS FILE" is worse than no image. If a slot isn't getting filled soon,
+delete its `<figure class="shot">` block from `index.html` instead of shipping the placeholder.
+
+**MARG and AdCompass were removed from the site.** Their write-ups and image folders are gone from
+`index.html` and `images/`. If they come back, the shot lists were: MARG — allocation tester (chosen origin
+plus every rejected origin with its reason), Integrations, Warehouses, all three with the production hostname
+cropped out. AdCompass — dashboard, weekly ranked test plan, strategy teardown, attention heatmap.

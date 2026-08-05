@@ -4,8 +4,8 @@ Source for my engineering portfolio. **Live at [kanishkajain621ak.github.io](htt
 
 I'm a Shopify and full-stack engineer in Gurgaon, India. I own end-to-end engineering for a D2C business —
 an 800-SKU Shopify storefront hand-coded in Liquid, two custom Shopify applications that replaced over
-US$1,000/month of third-party SaaS, an AI platform running 30+ domain-tuned agents and a logistics
-routing engine.
+US$1,000/month of third-party SaaS, a public multi-tenant Shopify app in review with the App Store, a
+cross-platform super-app on the Play Store, and an AI platform running 30+ domain-tuned agents.
 
 The client work itself is proprietary, so the site presents each system as a case study — problem,
 constraints, architecture, decisions, measured result — rather than as a repository.

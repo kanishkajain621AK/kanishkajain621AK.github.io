@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Kanishka Jain — Shopify &amp; Full-Stack Engineer</title>
-<meta name="description" content="Shopify and full-stack engineer. Case studies from an 800-SKU storefront trading at ~US$600K monthly GMV: custom apps, an automated report-generation and WhatsApp delivery platform, and an in-house shipping platform.">
+<meta name="description" content="Shopify and full-stack engineer. Case studies from an 800-SKU storefront trading at ~US$600K monthly GMV: custom and public Shopify apps, a cross-platform super-app, and an automated report-generation and WhatsApp delivery platform.">
 <meta property="og:title" content="Kanishka Jain — Shopify &amp; Full-Stack Engineer">
-<meta property="og:description" content="Case studies: 800-SKU Shopify storefront, in-house reviews &amp; loyalty apps, astrology report platform, in-house shipping platform.">
+<meta property="og:description" content="Case studies: 800-SKU Shopify storefront, in-house reviews &amp; loyalty apps, a public Shopify app, a Play Store super-app, and an astrology report platform.">
 <meta property="og:type" content="website">
 <style>
 :root{
@@ -166,9 +166,8 @@ footer a{color:var(--text-2)}
     I own end-to-end engineering for a D2C business trading at <strong>₹5 crore (~US$600K) monthly GMV</strong>.
     That means an 800-SKU Shopify storefront hand-coded in Liquid, two custom Shopify applications that
     replaced <strong>US$1,000+/month</strong> of third-party SaaS, a <strong>public multi-tenant Shopify app</strong>
-    now in review with the App Store, an <strong>AI platform running 30+ domain-tuned agents</strong>, an in-house
-    shipping platform replacing a 3PL aggregator, and a cross-platform super-app. Every system below was designed
-    and built from scratch.
+    now in review with the App Store, an <strong>AI platform running 30+ domain-tuned agents</strong>, and a
+    cross-platform super-app on the Play Store. Every system below was designed and built from scratch.
   </p>
   <div class="herolinks">
     <a class="btn primary" href="#work">See the case studies</a>
@@ -196,7 +195,7 @@ footer a{color:var(--text-2)}
       including whiteboarding the parts that can't be shown here.
     </p>
     <p>
-      Eight systems get a full write-up. Three more are summarised at the end. Everything listed is in production
+      Six systems get a full write-up. Three more are summarised at the end. Everything listed is in production
       or in review with Shopify.
     </p>
   </div>
@@ -294,18 +293,13 @@ footer a{color:var(--text-2)}
       <text class="tx" x="545" y="145" text-anchor="middle">GoKwik</text>
       <text class="tx-s" x="545" y="163" text-anchor="middle">1-click + COD verify</text>
 
-      <rect class="bx" x="690" y="60" width="180" height="56" rx="8"/>
-      <text class="tx" x="780" y="83" text-anchor="middle">Courier allocation</text>
-      <text class="tx-s" x="780" y="100" text-anchor="middle">RTO engine</text>
-
-      <rect class="bx" x="690" y="180" width="180" height="56" rx="8"/>
-      <text class="tx" x="780" y="203" text-anchor="middle">In-house apps</text>
-      <text class="tx-s" x="780" y="220" text-anchor="middle">reviews · loyalty</text>
+      <rect class="bx" x="690" y="120" width="180" height="60" rx="8"/>
+      <text class="tx" x="780" y="145" text-anchor="middle">In-house apps</text>
+      <text class="tx-s" x="780" y="163" text-anchor="middle">reviews · loyalty</text>
 
       <path class="ar" d="M170 140 H230 M170 150 H210 V48 H230 M170 160 H210 V208 H230 M170 165 H195 V269 H230"/>
       <path class="ar" d="M400 130 H470"/>
-      <path class="ar" d="M620 140 H655 V88 H690"/>
-      <path class="ar" d="M620 165 H655 V208 H690"/>
+      <path class="ar" d="M620 150 H690"/>
     </svg>
     <figcaption>The storefront and the systems around it. Blue nodes are customer-facing.</figcaption>
   </figure>
@@ -1098,323 +1092,7 @@ footer a{color:var(--text-2)}
   </div>
 </article>
 
-<!-- MARG -->
-<article class="case">
-  <div class="case-top">
-    <h2>MARG — in-house shipping platform replacing a 3PL aggregator</h2>
-    <span class="meta">Architect &amp; engineer · Jul 2026 – ongoing · internal platform, walkthrough on request</span>
-  </div>
-  <div class="tags">
-    <span class="tag">TypeScript</span><span class="tag">Fastify</span><span class="tag">PostgreSQL · row-level security</span>
-    <span class="tag">Redis</span><span class="tag">Azure Container Apps</span><span class="tag">Bicep</span>
-    <span class="tag">Service Bus</span><span class="tag">Key Vault</span><span class="tag">GitHub Actions · OIDC</span>
-    <span class="tag plain">Python / pandas</span>
-  </div>
-
-  <div class="stats" style="margin:0 0 26px">
-    <div class="stat"><div class="v">1.17M</div><div class="l">Lifetime orders analysed to design the allocation model</div></div>
-    <div class="stat"><div class="v">31.8%</div><div class="l">Of parcels had no delivery confirmation at all</div></div>
-    <div class="stat"><div class="v">102</div><div class="l">Automated checks gating every deploy</div></div>
-    <div class="stat"><div class="v">~3 min</div><div class="l">git push to running in production</div></div>
-  </div>
-
-  <h4>The problem</h4>
-  <p>
-    Divine Hindu ships roughly <strong>700,000 parcels a year</strong> through a shipping aggregator that picks
-    the courier, holds the rate cards, owns the tracking feed, and bills a margin on top of the courier's own
-    rate. The store had already switched aggregators twice in three years, and each switch reset the data.
-  </p>
-  <p>
-    The specific failure that started this project: <strong>the courier's name is not in the order data.</strong>
-    Across three eras of the store's own records, 2023 wrote the real carrier, 2024 to early 2026 wrote the
-    <em>aggregator's</em> name on 100% of orders, and the current stack writes null on about 88%. There is no
-    courier dimension to query against, so it can't be recovered after the fact.
-  </p>
-  <p>
-    Which makes the most valuable operational question in the business — <strong>which courier actually
-    delivers best to this pincode?</strong> — unanswerable across 1.17 million orders. Meanwhile 222,719
-    parcels in twelve months carried no delivery confirmation of any kind. If even a third of those are genuine
-    returns, that's a seven-figure annual leak nobody can see, let alone attribute.
-  </p>
-
-  <div class="split">
-    <div>
-      <h4>Constraints</h4>
-      <ul>
-        <li><strong>The courier field is permanently poisoned.</strong> No backfill exists, so identity has to be
-          recovered from data already present.</li>
-        <li><strong>Every Indian carrier models pickup differently</strong> — a registered warehouse name matched
-          byte-for-byte, a customer code plus origin area, a numeric ID. An origin isn't an address, it's a
-          per-carrier identifier.</li>
-      </ul>
-    </div>
-    <div>
-      <h4>&nbsp;</h4>
-      <ul>
-        <li><strong>Carriers push tracking to exactly one URL per customer.</strong> Cutover is a single switch
-          on their side, so the endpoint has to parse correctly <em>before</em> the switch — no staging to
-          rehearse in.</li>
-        <li><strong>Several carriers whitelist by IP</strong>, which forces a fixed egress address out of an
-          autoscaling platform.</li>
-        <li><strong>No downtime budget.</strong> The aggregator keeps running until each carrier is confirmed.</li>
-      </ul>
-    </div>
-  </div>
-
-  <figure>
-    <svg viewBox="0 0 900 530" role="img" aria-label="MARG platform architecture">
-      <text class="tx-s" x="20" y="16">INBOUND</text>
-      <rect class="bx-a" x="20" y="24" width="200" height="58" rx="8"/>
-      <text class="tx" x="120" y="47" text-anchor="middle">Shopify webhooks</text>
-      <text class="tx-s" x="120" y="65" text-anchor="middle">HMAC on raw bytes</text>
-      <rect class="bx-a" x="240" y="24" width="200" height="58" rx="8"/>
-      <text class="tx" x="340" y="47" text-anchor="middle">Carrier push</text>
-      <text class="tx-s" x="340" y="65" text-anchor="middle">one URL per account</text>
-      <rect class="bx-a" x="460" y="24" width="200" height="58" rx="8"/>
-      <text class="tx" x="560" y="47" text-anchor="middle">WhatsApp</text>
-      <text class="tx-s" x="560" y="65" text-anchor="middle">buyer replies · NDR ladder</text>
-      <rect class="bx-a" x="680" y="24" width="200" height="58" rx="8"/>
-      <text class="tx" x="780" y="47" text-anchor="middle">Ops console</text>
-      <text class="tx-s" x="780" y="65" text-anchor="middle">sessions · role checks</text>
-
-      <path class="ar" d="M120 82 V104 M340 82 V104 M560 82 V104 M780 82 V104 M120 104 H780"/>
-      <text class="tx-s" x="450" y="118" text-anchor="middle">verify → acknowledge → then work</text>
-
-      <text class="tx-s" x="20" y="140">COMPUTE · CONTAINER APPS</text>
-      <rect class="bx" x="20" y="148" width="273" height="58" rx="8"/>
-      <text class="tx" x="156" y="171" text-anchor="middle">API · Fastify</text>
-      <text class="tx-s" x="156" y="189" text-anchor="middle">2–8 replicas · tenant set per transaction</text>
-      <rect class="bx" x="313" y="148" width="273" height="58" rx="8"/>
-      <text class="tx" x="449" y="171" text-anchor="middle">Worker</text>
-      <text class="tx-s" x="449" y="189" text-anchor="middle">1–4 replicas · KEDA on queue depth</text>
-      <rect class="bx" x="606" y="148" width="274" height="58" rx="8"/>
-      <text class="tx" x="743" y="171" text-anchor="middle">Migration job</text>
-      <text class="tx-s" x="743" y="189" text-anchor="middle">runs inside the VNet</text>
-
-      <path class="ar" d="M450 206 V228"/>
-
-      <text class="tx-s" x="20" y="248">DOMAIN</text>
-      <rect class="bx" x="20" y="256" width="200" height="62" rx="8"/>
-      <text class="tx" x="120" y="279" text-anchor="middle">AWB prefix registry</text>
-      <text class="tx-s" x="120" y="297" text-anchor="middle">carrier identity from</text>
-      <text class="tx-s" x="120" y="311" text-anchor="middle">the waybill format</text>
-      <rect class="bx" x="240" y="256" width="200" height="62" rx="8"/>
-      <text class="tx" x="340" y="279" text-anchor="middle">Status mapper</text>
-      <text class="tx-s" x="340" y="297" text-anchor="middle">11 statuses · 14 NDR reasons</text>
-      <text class="tx-s" x="340" y="311" text-anchor="middle">unknowns flagged, never dropped</text>
-      <rect class="bx" x="460" y="256" width="200" height="62" rx="8"/>
-      <text class="tx" x="560" y="279" text-anchor="middle">Warehouses</text>
-      <text class="tx-s" x="560" y="297" text-anchor="middle">one site, N carrier</text>
-      <text class="tx-s" x="560" y="311" text-anchor="middle">registrations · IST cut-offs</text>
-      <rect class="bx-a" x="680" y="256" width="200" height="62" rx="8"/>
-      <text class="tx" x="780" y="279" text-anchor="middle">Allocation engine</text>
-      <text class="tx-s" x="780" y="297" text-anchor="middle">chosen origin + every</text>
-      <text class="tx-s" x="780" y="311" text-anchor="middle">rejected one, with reason</text>
-
-      <path class="ar" d="M450 318 V340"/>
-      <text class="tx-s" x="450" y="334" text-anchor="middle">routes on declared capabilities, never on a carrier's name</text>
-
-      <text class="tx-s" x="20" y="360">CARRIER ADAPTERS</text>
-      <rect class="bx" x="20" y="368" width="200" height="54" rx="8"/>
-      <text class="tx" x="120" y="390" text-anchor="middle">Carrier A</text>
-      <text class="tx-s" x="120" y="408" text-anchor="middle">book + track · live</text>
-      <rect class="bx" x="240" y="368" width="200" height="54" rx="8"/>
-      <text class="tx" x="340" y="390" text-anchor="middle">Carrier B</text>
-      <text class="tx-s" x="340" y="408" text-anchor="middle">book + track · live</text>
-      <rect class="bx" x="460" y="368" width="200" height="54" rx="8"/>
-      <text class="tx" x="560" y="390" text-anchor="middle">Carrier C</text>
-      <text class="tx-s" x="560" y="408" text-anchor="middle">track live · booking pending</text>
-      <rect class="bx" x="680" y="368" width="200" height="54" rx="8"/>
-      <text class="tx" x="780" y="390" text-anchor="middle">+ next</text>
-      <text class="tx-s" x="780" y="408" text-anchor="middle">one file + a credential card</text>
-
-      <path class="ar" d="M450 422 V444"/>
-
-      <text class="tx-s" x="20" y="464">DATA &amp; PLATFORM</text>
-      <rect class="bx-a" x="20" y="472" width="200" height="50" rx="8"/>
-      <text class="tx" x="120" y="493" text-anchor="middle">PostgreSQL 17</text>
-      <text class="tx-s" x="120" y="510" text-anchor="middle">FORCE row-level security</text>
-      <rect class="bx-a" x="240" y="472" width="200" height="50" rx="8"/>
-      <text class="tx" x="340" y="493" text-anchor="middle">Service Bus</text>
-      <text class="tx-s" x="340" y="510" text-anchor="middle">duplicate detection</text>
-      <rect class="bx-a" x="460" y="472" width="200" height="50" rx="8"/>
-      <text class="tx" x="560" y="493" text-anchor="middle">Redis</text>
-      <text class="tx-s" x="560" y="510" text-anchor="middle">optional · degrades to Postgres</text>
-      <rect class="bx-a" x="680" y="472" width="200" height="50" rx="8"/>
-      <text class="tx" x="780" y="493" text-anchor="middle">Key Vault</text>
-      <text class="tx-s" x="780" y="510" text-anchor="middle">managed identity</text>
-    </svg>
-    <figcaption>Five layers. A NAT gateway pins a static egress IP — the address carriers whitelist, and the only one permitted into Postgres.</figcaption>
-  </figure>
-
-  <h3>What I built</h3>
-  <ul>
-    <li><strong>Carrier identity recovered from the AWB.</strong> Waybill formats are carrier-specific and fixed,
-      so a multi-resolution prefix registry — length plus the first <em>k</em> characters, most-specific proven
-      level wins — decodes the carrier from the tracking number itself. An early four-character version split one
-      national carrier into five phantom couriers with delivery rates from 32% to 97%; the registry now refuses
-      to guess below a proven confidence level rather than inventing a courier.</li>
-    <li><strong>A tracking model that discards nothing.</strong> Every scan maps into 11 canonical statuses and
-      14 NDR reason codes; anything unrecognised is stored raw and flagged rather than dropped. An early version
-      of my own mapper counted <em>out for delivery</em> as delivered because the rule was "contains deliver",
-      which inflated every courier's score. There's now a pinned test per carrier so it can't recur.</li>
-    <li><strong>Warehouse and carrier registration as first-class data.</strong> One physical warehouse, N carrier
-      registrations, each with its own state machine. A warehouse with no active registration cannot ship,
-      however complete its address looks. Changing a pincode is modelled as <em>recreate</em>, not edit, because
-      the carrier API can't do it.</li>
-    <li><strong>An allocation engine that explains itself.</strong> Given a destination pincode and payment mode
-      it returns the chosen origin, the zone, minutes remaining to cut-off — and every <em>rejected</em> origin
-      with the specific reason it lost. "Why did this ship from Gurugram again?" needed an answer you could
-      argue with.</li>
-    <li><strong>The platform.</strong> Infrastructure is all Bicep. Migrations run as a job inside the VNet, so
-      the database has no public firewall rule at all. Secrets live in Key Vault resolved by managed identity —
-      and the console <em>writes</em> there, so configuring a new carrier needs no redeploy and no terminal.</li>
-  </ul>
-
-  <h3>On correctness</h3>
-  <p>
-    Row-level security is the reason this has 102 automated checks rather than a smoke test. <strong>RLS fails
-    silently</strong> — without a tenant context every policy matches nothing and queries return zero rows, and
-    a superuser bypasses it entirely, so a passing local test proves nothing. The harness runs as a deliberately
-    non-superuser role and asserts isolation in both directions. It caught a real defect: <strong>37 call sites
-    querying the pool with no tenant context</strong>, which would have returned 403 on every authenticated
-    request in production, after a deployment that reported success.
-  </p>
-  <p>
-    Other checks earned their place the same way. Connection-pool arithmetic — 8 replicas × 3, plus 4 × 3, plus
-    1, is 37 against a ceiling of 50 — is asserted by a test, because a scale event that exhausts the pool is an
-    outage rather than a slowdown. Day boundaries are computed in IST, not UTC, so warehouse capacity doesn't
-    reset at 05:30. Every generated Azure resource name is measured against its length limit before deployment.
-  </p>
-
-  <h4>Result</h4>
-  <p>
-    MARG is deployed and running in production. Carrier cutover is in progress: bookings and tracking work
-    end-to-end for one national carrier, a second adapter is complete, and a third parses tracking today while
-    its booking credentials clear. The aggregator stays live until each carrier is confirmed — no gap in
-    tracking is acceptable.
-  </p>
-  <p>
-    The analysis that justified the build is a result in itself. Controlling for the COD/prepaid mix
-    <strong>reversed the courier ranking</strong>: the carrier leading on aggregate delivery rate at 68%
-    finishes <strong>last on COD at 46.2%</strong>, while another is <strong>16.4 points better on COD</strong>
-    across every district tested. A textbook Simpson's paradox — and an allocation rule worth real money that
-    was invisible for as long as the courier field stayed blank.
-  </p>
-
-  <div class="shots">
-    <figure class="shot"><img src="images/marg/01-allocation-tester.png" alt="Allocation tester"><div class="cap">Allocation tester — chosen origin and every rejected one</div></figure>
-    <figure class="shot"><img src="images/marg/02-integrations.png" alt="Integrations"><div class="cap">Console — carrier credential cards</div></figure>
-    <figure class="shot"><img src="images/marg/03-warehouses.png" alt="Warehouses"><div class="cap">Console — per-carrier registration state</div></figure>
-  </div>
-</article>
-
 </div></section>
-
-<!-- ADCOMPASS -->
-<article class="case">
-  <div class="case-top">
-    <h2>AdCompass — AI creative-intelligence SaaS for Meta advertisers</h2>
-    <span class="meta">Built and shipped solo · <a href="https://adcompass-web.gentlesand-4fd3435f.centralindia.azurecontainerapps.io" target="_blank" rel="noopener">live demo ↗</a></span>
-  </div>
-  <div class="tags">
-    <span class="tag">Next.js 15</span><span class="tag">TypeScript</span><span class="tag">Tailwind v4</span>
-    <span class="tag">PostgreSQL 16 + pgvector</span><span class="tag">Drizzle ORM</span>
-    <span class="tag">Provider-agnostic LLM adapter</span><span class="tag">Azure Container Apps</span>
-    <span class="tag">Bicep</span><span class="tag plain">Playwright E2E</span>
-  </div>
-
-  <div class="stats" style="margin:0 0 26px">
-    <div class="stat"><div class="v">12</div><div class="l">Dashboard modules</div></div>
-    <div class="stat"><div class="v">3</div><div class="l">Signal streams triangulated into one plan</div></div>
-    <div class="stat"><div class="v">0 keys</div><div class="l">Runs end-to-end fully mocked</div></div>
-    <div class="stat"><div class="v">Weekly</div><div class="l">Ranked test plan, evidence attached</div></div>
-  </div>
-
-  <div class="split">
-    <div>
-      <h4>The question it answers</h4>
-      <p>
-        Every growth team asks the same thing on Monday: <em>what should we test this week?</em> Most tools
-        answer with another dashboard. AdCompass is a decision engine — it triangulates competitor ads, customer
-        language and the brand's own performance into ranked recommendations with the evidence attached.
-      </p>
-    </div>
-    <div>
-      <h4>The insight it's built on</h4>
-      <p>
-        <strong>Winners hide in repetition.</strong> A concept a brand cuts into six ad variants is a far
-        stronger "this converts" signal than any single long-running ad. So ads are grouped into creative
-        clusters the way a professional strategist would, and winner detection scores repetition × duration ×
-        recency rather than raw spend or longevity alone.
-      </p>
-    </div>
-  </div>
-
-  <figure>
-    <svg viewBox="0 0 900 330" role="img" aria-label="AdCompass four-layer architecture">
-      <rect class="bx" x="60" y="16" width="780" height="58" rx="9"/>
-      <text class="tx" x="80" y="40">A · Data sources</text>
-      <text class="tx-s" x="80" y="60">Meta Marketing API · ad-library providers · reviews and forums · billing events — all behind swappable adapters</text>
-
-      <path class="ar" d="M450 74 V96"/>
-
-      <rect class="bx" x="60" y="96" width="780" height="58" rx="9"/>
-      <text class="tx" x="80" y="120">B · Ingestion &amp; enrichment</text>
-      <text class="tx-s" x="80" y="140">nightly jobs diff ads · video transcribed · creatives LLM-tagged against a zod-validated taxonomy · embedded into pgvector</text>
-
-      <path class="ar" d="M450 154 V176"/>
-
-      <rect class="bx-a" x="60" y="176" width="780" height="66" rx="9"/>
-      <text class="tx" x="80" y="200">C · Intelligence core</text>
-      <text class="tx-s" x="80" y="220">deterministic engines — fatigue rules, winner and virality scores, angle momentum, the test-plan ranker</text>
-      <text class="tx-s" x="80" y="236">Brand Brain RAG memory · strategist agent that retrieves before it answers, and cites what it used</text>
-
-      <path class="ar" d="M450 242 V264"/>
-
-      <rect class="bx" x="60" y="264" width="780" height="58" rx="9"/>
-      <text class="tx" x="80" y="288">D · Product surfaces</text>
-      <text class="tx-s" x="80" y="308">Next.js dashboard, 12 modules · Monday email plan · teardown reports · grounded chat · public SEO pages and free tools</text>
-    </svg>
-    <figcaption>Data flows down; every surface reads from the intelligence core rather than querying sources directly.</figcaption>
-  </figure>
-
-  <h3>What it does</h3>
-  <ul>
-    <li><strong>A ranked weekly test plan</strong> scored on momentum, account fit, novelty and what's already
-      been tried.</li>
-    <li><strong>Competitor strategy profiles</strong> — creative-type, hook and angle mixes, top creatives by
-      reuse, launch-batch activity reports.</li>
-    <li><strong>Targeting and campaign-structure inference</strong> with explicit confidence and the evidence
-      behind each verdict, rather than an unattributable guess.</li>
-    <li><strong>Influencer tracking</strong> with per-comment sentiment, and a client-side creative attention
-      heatmap with compare-image export.</li>
-    <li><strong>Brand Brain</strong> — a per-workspace memory of every experiment, so recommendations compound
-      for each customer instead of restarting.</li>
-  </ul>
-
-  <h3>The line between deterministic and generated</h3>
-  <p>
-    <strong>Everything numeric is computed deterministically</strong> — fatigue rules, winner scores, momentum.
-    The LLM layer interprets, classifies and writes; it never calculates. Classification is validated against a
-    fixed taxonomy with zod schemas, and the whole adapter is provider-agnostic and fully mockable, so
-    <strong>the entire product runs end-to-end with zero API keys</strong>. That's what makes the test suite
-    meaningful: the engines can be asserted against fixtures without a model in the loop.
-  </p>
-  <p>
-    It ships from a single Bicep template — Container Apps for the web tier, Container Apps Jobs for the nightly
-    cron work, Postgres Flexible Server, ACR and Log Analytics — with GitHub Actions building, migrating and
-    rolling both the web app and the jobs on every push.
-  </p>
-
-  <div class="shots">
-    <figure class="shot"><img src="images/adcompass/01-dashboard.png" alt="Dashboard"><div class="cap">Competitor creative clusters</div></figure>
-    <figure class="shot"><img src="images/adcompass/02-test-plan.png" alt="Test plan"><div class="cap">Weekly ranked test plan</div></figure>
-    <figure class="shot"><img src="images/adcompass/03-teardown.png" alt="Teardown"><div class="cap">Strategy teardown</div></figure>
-    <figure class="shot"><img src="images/adcompass/04-heatmap.png" alt="Heatmap"><div class="cap">Creative attention heatmap</div></figure>
-  </div>
-</article>
-
 <!-- ============ MORE ============ -->
 <section id="more"><div class="wrap">
   <h2>Also shipped</h2>
