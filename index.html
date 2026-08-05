@@ -503,21 +503,34 @@ footer a{color:var(--text-2)}
       activity, with an append-only transaction log behind everything.</li>
   </ul>
 
+  <h3>What the merchant actually operates</h3>
+  <p>
+    The service ships with its own admin console rather than a settings page. Marketing configures earn and burn
+    rules, per-product and per-collection cashback overrides, the referral programme and the customer-facing
+    widget's copy and colours. Operations works from transaction logs, exclusions, caps and flags, and a manual
+    adjustment trail. Finance pulls issuance, redemption, expiry and outstanding-liability reports as CSV or
+    Excel. Migration and balance-import tools existed so the switch off the paid SaaS could carry every existing
+    customer balance across in one pass.
+  </p>
+
   <div class="shots">
-    <figure class="shot"><img src="images/divine-points/01-admin.png" alt="Loyalty admin"><div class="cap">Merchant admin — rules, slabs and caps</div></figure>
-    <figure class="shot"><img src="images/divine-points/02-storefront-widget.png" alt="Storefront widget"><div class="cap">Storefront widget — balance and redeem box</div></figure>
-    <figure class="shot"><img src="images/divine-points/03-checkout-redeem.png" alt="Checkout redemption"><div class="cap">Redemption inside one-click checkout</div></figure>
+    <figure class="shot"><img src="images/divine-points/06-checkout-redeem.jpg" alt="Coin redemption inside one-click checkout"><div class="cap">Redemption inside GoKwik one-click checkout — the wallet quotes ₹437 of a ₹550 balance against a ₹1,751 cart, the 25% cap applied server-side</div></figure>
+    <figure class="shot"><img src="images/divine-points/01-admin.jpg" alt="Points and rewards program rules"><div class="cap">Program flow — ways to earn and burn, each rule fixed or percentage, individually switchable</div></figure>
+    <figure class="shot"><img src="images/divine-points/02-storefront-widget.jpg" alt="Storefront widget customiser"><div class="cap">Storefront customiser — coin name, copy, brand colour, live preview of the customer-facing widget</div></figure>
+    <figure class="shot"><img src="images/divine-points/03-product-cashback.jpg" alt="Product-level cashback setup"><div class="cap">Per-product and per-collection cashback overrides, resolved against the Shopify product catalogue</div></figure>
+    <figure class="shot"><img src="images/divine-points/04-whatsapp-triggers.jpg" alt="WhatsApp lifecycle triggers"><div class="cap">Lifecycle messaging — one toggle and template mapping per wallet event, with a send-test path</div></figure>
+    <figure class="shot"><img src="images/divine-points/05-reports.jpg" alt="Reports export"><div class="cap">Finance-facing reports — issuance, redemption, expiry, outstanding liability, CSV or Excel</div></figure>
   </div>
 </article>
 
 <article class="case">
   <div class="case-top">
-    <h2>Divine Hindu super-app — commerce, astrology and AR in one</h2>
+    <h2>Divine Hindu super-app — commerce, astrology and devotion in one</h2>
     <span class="meta">Architect &amp; engineer · live on the Play Store</span>
   </div>
   <div class="tags">
     <span class="tag">React Native 0.86</span><span class="tag">Expo 57</span><span class="tag">TypeScript</span>
-    <span class="tag">ViroReact · AR</span><span class="tag">Shopify Storefront API</span>
+    <span class="tag">Shopify Storefront API</span>
     <span class="tag">Checkout Sheet Kit</span><span class="tag">Node.js microservices</span>
     <span class="tag">Azure</span><span class="tag plain">EAS Build + OTA</span>
   </div>
@@ -535,7 +548,7 @@ footer a{color:var(--text-2)}
       <p>
         Three things that normally live in separate apps, stitched into one: authentic devotional
         <strong>shopping</strong>, a full <strong>Vedic astrology suite</strong> that runs entirely on the
-        device, and <strong>guided devotion</strong> — AR pooja, daily rituals, live astrologer chat. It shares
+        device, and <strong>guided devotion</strong> — daily rituals, live astrologer chat, an AI pandit. It shares
         catalogue, customers and loyalty wallet with the Shopify storefront, so a customer is the same person
         everywhere.
       </p>
@@ -607,9 +620,6 @@ footer a{color:var(--text-2)}
       ELP for the moon, with ΔT and nutation tables, ayanamsa, house systems, KP sub-lords, vargas, ashtakvarga,
       dasha timelines and guna-milan — all in TypeScript, executed on the device. No astrology API dependency,
       zero latency, and it works without a signal.</li>
-    <li><strong>AR that actually ships.</strong> ViroReact integrated through an Expo config plugin, degrading
-      gracefully where the native module isn't available and running fully in EAS builds. Place a deity via the
-      camera, follow a guided ritual, capture a darshan card.</li>
     <li><strong>Checkout that stays native.</strong> Shopify's Checkout Sheet Kit keeps payment in a first-class
       sheet instead of bouncing out to a browser, with completion callbacks that reconcile the cart.</li>
     <li><strong>Re-skinnable by config.</strong> Branding, theme, navigation tabs, home layout and service URLs
@@ -621,7 +631,6 @@ footer a{color:var(--text-2)}
   <div class="shots">
     <figure class="shot"><img src="images/super-app/01-home.png" alt="App home"><div class="cap">App home — shop and devotion in one</div></figure>
     <figure class="shot"><img src="images/super-app/02-astrology.png" alt="Astrology"><div class="cap">On-device Kundli and Panchang</div></figure>
-    <figure class="shot"><img src="images/super-app/03-ar-pooja.png" alt="AR pooja"><div class="cap">AR pooja via the camera</div></figure>
     <figure class="shot"><img src="images/super-app/04-jyotish.png" alt="Jyotish Live"><div class="cap">Jyotish Live — astrologer consultations</div></figure>
   </div>
 </article>
