@@ -50,7 +50,10 @@ to ask first than to take it down after a competitor sees it. If the answer is n
 | `02-pdp.png` | A strong product page — gallery, variants, trust badges, reviews section visible |
 | `03-cart-upsell.png` | Cart drawer open with upsells showing |
 | `04-combo-builder.png` | Build Your Own Combo mid-flow, with the tiered discount visible |
-| `05-lighthouse.png` | **The single most valuable screenshot on the site.** Run Lighthouse mobile in Chrome DevTools on a product page, capture the score wheel with performance 90+. Include the URL so it's verifiable. |
+
+The Lighthouse slot was removed from `index.html` rather than shipped as a placeholder. If you ever run
+Lighthouse mobile on a product page and get a 90+ performance score, capture the score wheel **with the URL
+visible** and I'll put the figure back — it's the only hard evidence for the 60 → 90+ claim on that page.
 
 ### `images/reviews-app/`
 All six slots are filled with real screenshots. `02-moderation.jpg` has the four customer email
@@ -135,11 +138,17 @@ and the widget rendering on a live product page. Those are the only two customer
 doesn't show.
 
 ### `images/theme/`
-| File | What to capture |
+`01-theme-home.jpg` is a real screenshot of the demo store's Spotlight section (browser chrome cropped) and is
+the image on the "Also shipped" card.
+
+| File | Status |
 |---|---|
-| `01-theme-home.png` | Theme demo home page |
-| `02-3d-showcase.png` | The 3D product showcase mid-rotation |
-| `03-before-after.png` | The before/after slider mid-drag |
+| `01-theme-home.jpg` | Real — demo store Spotlight section |
+| `02-3d-showcase.png` | Placeholder — the 3D product showcase mid-rotation |
+| `03-before-after.png` | Placeholder — the before/after slider mid-drag |
+
+Neither placeholder is referenced by `index.html`, so nothing is broken; they're only worth capturing if the
+theme gets promoted to a full case study.
 
 ### `images/pujaghar/`
 | File | What to capture |
@@ -148,10 +157,8 @@ doesn't show.
 | `02-combo.png` | Combo builder with stacked discounts visible |
 
 ### `images/shapify/`
-| File | What to capture |
-|---|---|
-| `01-home.png` | Home page |
-| `02-pdp.png` | Video-led product page |
+`01-home.jpg` is a real screenshot of the Cult Essentials collection grid (browser chrome cropped) and is the
+image on the "Also shipped" card. `02-pdp.png` is still a placeholder and is not referenced by `index.html`.
 
 ---
 
@@ -159,11 +166,10 @@ doesn't show.
 
 Most galleries are now filled with real screenshots. What's left, in order of what it would prove:
 
-1. `divine-hindu/05-lighthouse.png` — the only hard evidence for the 60 → 90+ performance claim, and the
-   single most valuable screenshot still missing from the site
+1. **A Lighthouse mobile report** on a Divine Hindu product page, score wheel plus URL — the only hard evidence
+   for the 60 → 90+ claim. The slot is currently removed rather than empty
 2. A taller `ai-engine/01-agents.jpg` — the roster currently shows six agents against a "30+" claim
 3. The ReviewMaster buyer form at `/r/:token` on a phone, and the widget on a live product page
-4. `theme/`, `pujaghar/` and `shapify/` — still placeholders, and they're the images on the "Also shipped" cards
 
 A placeholder that says "REPLACE THIS FILE" is worse than no image. If a slot isn't getting filled soon,
 delete its `<figure class="shot">` block from `index.html` instead of shipping the placeholder.
