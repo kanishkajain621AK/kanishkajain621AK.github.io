@@ -165,9 +165,10 @@ footer a{color:var(--text-2)}
   <p class="lede">
     I own end-to-end engineering for a D2C business trading at <strong>₹5 crore (~US$600K) monthly GMV</strong>.
     That means an 800-SKU Shopify storefront hand-coded in Liquid, two custom Shopify applications that
-    replaced <strong>US$1,000+/month</strong> of third-party SaaS, an <strong>AI platform running 30+ domain-tuned agents</strong>,
-    and an in-house shipping platform replacing a 3PL aggregator, and a cross-platform super-app.
-    Every system below was designed and built from scratch, and is live in production.
+    replaced <strong>US$1,000+/month</strong> of third-party SaaS, a <strong>public multi-tenant Shopify app</strong>
+    now in review with the App Store, an <strong>AI platform running 30+ domain-tuned agents</strong>, an in-house
+    shipping platform replacing a 3PL aggregator, and a cross-platform super-app. Every system below was designed
+    and built from scratch.
   </p>
   <div class="herolinks">
     <a class="btn primary" href="#work">See the case studies</a>
@@ -195,7 +196,8 @@ footer a{color:var(--text-2)}
       including whiteboarding the parts that can't be shown here.
     </p>
     <p>
-      Six systems get a full write-up. Four more are summarised at the end. Everything listed is in production.
+      Eight systems get a full write-up. Three more are summarised at the end. Everything listed is in production
+      or in review with Shopify.
     </p>
   </div>
 </div></section>
@@ -396,6 +398,223 @@ footer a{color:var(--text-2)}
     <figure class="shot"><img src="images/reviews-app/05-widget-designer.jpg" alt="Widget designer"><div class="cap">Display rules and widget designer</div></figure>
     <figure class="shot"><img src="images/reviews-app/06-add-review.jpg" alt="Add review"><div class="cap">Manual entry with backdating</div></figure>
     <figure class="shot"><img src="images/reviews-app/01-storefront-widget.jpg" alt="Storefront widget"><div class="cap">The widget on a product page</div></figure>
+  </div>
+</article>
+
+<article class="case">
+  <div class="case-top">
+    <h2>ReviewMaster — a public, multi-tenant Shopify reviews app</h2>
+    <span class="meta">Architect &amp; sole engineer · submitted to the Shopify App Store</span>
+  </div>
+  <div class="tags">
+    <span class="tag">Next.js 16 App Router</span><span class="tag">TypeScript</span>
+    <span class="tag">Prisma 6 · PostgreSQL</span><span class="tag">Azure App Service</span>
+    <span class="tag">App Bridge · token exchange</span><span class="tag">Theme app extension</span>
+    <span class="tag">Shopify Billing</span><span class="tag plain">Etsy Open API v3</span>
+  </div>
+
+  <div class="stats" style="margin:0 0 26px">
+    <div class="stat"><div class="v">47</div><div class="l">API routes across 35 service modules</div></div>
+    <div class="stat"><div class="v">17</div><div class="l">Database models, all tenant-scoped</div></div>
+    <div class="stat"><div class="v">8 KB<span class="d">gz</span></div><div class="l">Storefront widget, zero dependencies</div></div>
+    <div class="stat"><div class="v">Level 2</div><div class="l">Protected Customer Data approval</div></div>
+  </div>
+
+  <div class="split">
+    <div>
+      <h4>Why build it</h4>
+      <p>
+        The in-house reviews platform above solves one merchant's problem. This is the same problem solved for
+        every merchant at once — a subscription SaaS competing directly with Judge.me, Loox and Okendo. Going
+        from single-tenant to public distribution changes almost everything: authentication, tenancy isolation,
+        billing, data protection and the app-review process all become the product rather than plumbing around it.
+      </p>
+    </div>
+    <div>
+      <h4>What it actually has to do</h4>
+      <p>
+        Know when an order was <em>delivered</em> rather than paid. Email the buyer at the right moment and stop
+        if they've already reviewed. Take photos and video from a phone without making them wait. Let the merchant
+        moderate first. Render on any theme without hurting Lighthouse. Push the aggregate into metafields so
+        Google and the Shop app pick it up. And never misrepresent a review's provenance — which is now illegal,
+        not merely tacky.
+      </p>
+    </div>
+  </div>
+
+  <h3>Order to published review</h3>
+  <p>
+    This pipeline is the product. Every step is asynchronous, retried and independently observable, and the
+    scheduling of work is deliberately separated from the doing of it.
+  </p>
+
+  <figure>
+    <svg viewBox="0 0 900 330" role="img" aria-label="ReviewMaster review collection pipeline">
+      <rect class="bx-a" x="20" y="20" width="180" height="56" rx="8"/>
+      <text class="tx" x="110" y="43" text-anchor="middle">orders/fulfilled</text>
+      <text class="tx-s" x="110" y="61" text-anchor="middle">Shopify webhook · HMAC</text>
+
+      <rect class="bx" x="250" y="20" width="180" height="56" rx="8"/>
+      <text class="tx" x="340" y="43" text-anchor="middle">Record intent only</text>
+      <text class="tx-s" x="340" y="61" text-anchor="middle">nextSendAt = now + delay</text>
+
+      <rect class="bx-a" x="480" y="20" width="180" height="56" rx="8"/>
+      <text class="tx" x="570" y="43" text-anchor="middle">Hourly sweep</text>
+      <text class="tx-s" x="570" y="61" text-anchor="middle">where nextSendAt ≤ now</text>
+
+      <rect class="bx" x="710" y="20" width="170" height="56" rx="8"/>
+      <text class="tx" x="795" y="43" text-anchor="middle">Email provider</text>
+      <text class="tx-s" x="795" y="61" text-anchor="middle">single-use token link</text>
+
+      <path class="ar" d="M200 48 H250 M430 48 H480 M660 48 H710"/>
+      <path class="ar" d="M570 76 V96 H340 V76"/>
+      <text class="tx-s" x="455" y="112" text-anchor="middle">send fails → nextSendAt stays in the past → the next sweep retries it</text>
+
+      <rect class="bx-a" x="20" y="140" width="180" height="56" rx="8"/>
+      <text class="tx" x="110" y="163" text-anchor="middle">Buyer opens /r/:token</text>
+      <text class="tx-s" x="110" y="181" text-anchor="middle">no login · token is the auth</text>
+
+      <rect class="bx" x="250" y="140" width="180" height="56" rx="8"/>
+      <text class="tx" x="340" y="163" text-anchor="middle">201 in ~300 ms</text>
+      <text class="tx-s" x="340" y="181" text-anchor="middle">MIME + magic-byte checks</text>
+
+      <rect class="bx" x="480" y="140" width="180" height="56" rx="8"/>
+      <text class="tx" x="570" y="163" text-anchor="middle">Upload after flush</text>
+      <text class="tx-s" x="570" y="181" text-anchor="middle">merchant's own Shopify Files</text>
+
+      <rect class="bx-a" x="710" y="140" width="170" height="56" rx="8"/>
+      <text class="tx" x="795" y="163" text-anchor="middle">Moderation queue</text>
+      <text class="tx-s" x="795" y="181" text-anchor="middle">merchant approves</text>
+
+      <path class="ar" d="M795 76 V108 H110 V140"/>
+      <path class="ar" d="M200 168 H250 M430 168 H480 M660 168 H710"/>
+
+      <rect class="bx" x="130" y="248" width="200" height="56" rx="8"/>
+      <text class="tx" x="230" y="271" text-anchor="middle">reviews.rating metafield</text>
+      <text class="tx-s" x="230" y="289" text-anchor="middle">Google rich results · Shop app</text>
+
+      <rect class="bx" x="360" y="248" width="200" height="56" rx="8"/>
+      <text class="tx" x="460" y="271" text-anchor="middle">Storefront widget</text>
+      <text class="tx-s" x="460" y="289" text-anchor="middle">JSON-LD · lazy-loaded</text>
+
+      <rect class="bx" x="590" y="248" width="200" height="56" rx="8"/>
+      <text class="tx" x="690" y="271" text-anchor="middle">One-use discount code</text>
+      <text class="tx-s" x="690" y="289" text-anchor="middle">tiered by media, never by rating</text>
+
+      <path class="ar" d="M795 196 V222 H230 V248 M460 222 V248 M690 222 V248"/>
+    </svg>
+    <figcaption>The webhook only records intent. A mail-provider outage delays emails; it can never lose an order.</figcaption>
+  </figure>
+
+  <h3>What makes it hold up</h3>
+  <ul>
+    <li><strong>Failure is the retry.</strong> A failed send leaves <code>nextSendAt</code> in the past, so the
+      next sweep picks it up. No queue infrastructure, no dead-letter handling, and no cron that can double-send.</li>
+    <li><strong>Media never blocks the response.</strong> Validation is synchronous — MIME allowlist plus
+      magic-byte sniffing — but the upload to Shopify Files runs after the response has flushed. The buyer never
+      waits on a CDN round trip.</li>
+    <li><strong>Media lives in the merchant's own Shopify Files</strong>, not our storage. No storage cost to
+      carry, served from Shopify's CDN, and the merchant keeps their assets if they uninstall.</li>
+    <li><strong>Reminders self-cancel.</strong> A submitted review, an unsubscribe or a bounce cancels everything
+      outstanding for that address.</li>
+    <li><strong>Tenancy is checked at the query, not the route.</strong> Every authenticated query carries
+      <code>storeId</code> from the verified session token and ownership is asserted before any cross-entity
+      write, so a merchant can't reach another's data by guessing an ID.</li>
+  </ul>
+
+  <h3>Compliance enforced by the schema, not by policy</h3>
+  <p>
+    The FTC's Rule on Consumer Reviews (16 CFR 465) carries civil penalties north of US$50,000 per violation for
+    conditioning an incentive on <em>what a review says</em>. The EU Omnibus Directive and the UK DMCC Act say the
+    same thing.
+  </p>
+  <p>
+    So the incentive model has <strong>no minimum-rating field</strong>, and the grant function
+    <strong>cannot receive a rating</strong> — the caller has no way to pass one. There is nowhere in the type
+    system to express the illegal idea. A <code>minRating</code> column with a comment saying "don't set this
+    above 1" eventually gets set; a column that doesn't exist can't. Rewarding a <em>photo</em> is lawful, because
+    media is a content type rather than an opinion — a one-star review with a photo earns exactly what a five-star
+    one with a photo earns.
+  </p>
+  <p>
+    The same reasoning governs provenance. <code>verificationStatus</code> can only ever be
+    <code>verified_buyer</code> on the tokenised post-purchase path, because that is the only path with an order
+    to point at. CSV imports, manual entry and marketplace imports are structurally incapable of claiming
+    verification.
+  </p>
+
+  <h3>Authentication: the part that's genuinely hard</h3>
+  <p>
+    Embedded Shopify apps run in an iframe inside another origin's admin, where cookies are unreliable and
+    Safari's ITP blocks them outright. The app authenticates on App Bridge session tokens — a 60-second JWT
+    verified for issuer, destination, audience and expiry, then exchanged server-side for an offline access token.
+    That exchange <em>is</em> the install: no OAuth callback, no redirect, no state nonce to get wrong. Access
+    tokens live an hour and refresh tokens ninety days; both are encrypted at rest with AES-256-GCM. A
+    present-but-invalid session token is a hard failure rather than a silent downgrade to cookie auth, so an
+    attacker can't strip a header to select the weaker mechanism.
+  </p>
+  <p>
+    The bug worth the war story: Next's <code>&lt;Script strategy="beforeInteractive"&gt;</code> does not render
+    into <code>&lt;head&gt;</code> in the App Router — it emits a preload plus a body-queued shim. App Bridge
+    therefore never initialised, <code>window.shopify</code> stayed undefined, and every request silently fell
+    back to cookies. The page looked completely fine. I proved the fix by writing per-store telemetry that
+    recorded which mechanism had actually authenticated each request.
+  </p>
+
+  <h3>The rest of the surface</h3>
+  <ul>
+    <li><strong>Collection</strong> — post-purchase requests with a 0–60 day merchant-configurable delay and up to
+      two reminders, a token-based buyer form that needs no account, photo and video reviews, a storefront
+      submission widget with honeypot and per-email rate limiting, and product-page Q&amp;A.</li>
+    <li><strong>Import</strong> — CSV with per-row error reporting, AliExpress listing scrape with
+      deduplication and star normalisation, and Etsy via OAuth 2.0 PKCE with listings matched to Shopify products
+      by title. Every imported review is source-labelled and never marked verified.</li>
+    <li><strong>Display</strong> — nine widget layouts shipped as a theme app extension: 8 KB gzipped, no
+      framework, lazy-loaded via <code>IntersectionObserver</code> 400px before it enters the viewport, with
+      explicit media dimensions so it contributes no CLS. Plus JSON-LD for Google rich results and the
+      <code>reviews.rating</code> metafield the Shop app reads.</li>
+    <li><strong>Operations</strong> — four subscription tiers gated server-side at every write path, bounce and
+      complaint handling through signed provider webhooks with a suppression list, automated retention (PII
+      redacted at 30 days post-expiry, rows purged at 730), and self-healing webhook registration.</li>
+  </ul>
+
+  <h3>Decisions I'd defend in a review</h3>
+  <ul>
+    <li><strong>The storefront widget is deliberately not React.</strong> It runs on product pages, which carry
+      most of the weight in the Lighthouse score a merchant is judged on. Its source is heavily commented — the
+      FTC rules, the CLS reasoning and the escaping rules all need to survive the next person to touch it — so a
+      custom build step strips comments rather than minifying. Renaming identifiers would mean a stack trace from
+      a merchant's storefront points at <code>a.b(c)</code> and is worth nothing.</li>
+    <li><strong>Schema migration lives inside the deploy.</strong> <code>prisma db push</code> runs in CI before
+      the container swaps, so the database is never behind the code that expects it. This replaced a recurring
+      failure where a deploy succeeded and then threw on the first query.</li>
+    <li><strong>Provider-agnostic email.</strong> One interface, three implementations, selected by environment
+      variable. Not premature abstraction — AWS denied production SES access for a new account on an
+      <code>azurewebsites.net</code> domain, and the switch was a config change plus a webhook route rather than
+      a rewrite.</li>
+    <li><strong>Build errors are not ignorable.</strong> <code>typescript.ignoreBuildErrors</code> is off
+      deliberately: it had previously masked five calls to a function that did not exist, each throwing at runtime
+      while the build went green.</li>
+  </ul>
+
+  <h3>What the app review actually gates on</h3>
+  <p>
+    Shopify's review process and any enterprise merchant's procurement ask the same questions, so this was built
+    rather than promised: <strong>Protected Customer Data Level 2</strong> approval with all sixteen
+    data-protection questions answered against real implementation; a published DPA under GDPR Article 28 with
+    SCCs and UK/Swiss addenda, a sub-processor list, privacy policy and terms; the three mandatory GDPR
+    webhooks — <code>customers/data_request</code>, <code>customers/redact</code>, <code>shop/redact</code> —
+    implemented rather than stubbed; and a documented retention schedule, DLP posture, incident-response runbook
+    and environment separation. Every third-party credential is encrypted at rest.
+  </p>
+
+  <div class="shots">
+    <figure class="shot"><img src="images/public-app/01-app-admin.jpg" alt="Embedded app dashboard"><div class="cap">The embedded admin inside Shopify — onboarding checklist, collection metrics and the plan meter</div></figure>
+    <figure class="shot"><img src="images/public-app/03-incentives.jpg" alt="Incentive setup"><div class="cap">The compliance argument made visible: no minimum-rating control exists, and the reason is stated where a merchant will look for it</div></figure>
+    <figure class="shot"><img src="images/public-app/04-import.jpg" alt="Import sources"><div class="cap">Import — CSV, manual, AliExpress and Etsy, with the provenance rules stated at the point of import</div></figure>
+    <figure class="shot"><img src="images/public-app/05-widgets.jpg" alt="Widget layouts"><div class="cap">Nine storefront layouts, each shipped through the same 8 KB theme app extension</div></figure>
+    <figure class="shot"><img src="images/public-app/02-moderation.jpg" alt="Moderation queue"><div class="cap">Moderation — verified-buyer and incentivised badges are set by the collection path, not by hand (reviewer emails redacted)</div></figure>
+    <figure class="shot"><img src="images/public-app/06-settings.jpg" alt="Settings"><div class="cap">Merchant-owned moderation, media and display rules</div></figure>
   </div>
 </article>
 
@@ -1200,20 +1419,9 @@ footer a{color:var(--text-2)}
 <!-- ============ MORE ============ -->
 <section id="more"><div class="wrap">
   <h2>Also shipped</h2>
-  <p>Four more production builds — same approach, shorter write-up.</p>
+  <p>Three more production builds — same approach, shorter write-up.</p>
 
   <div class="cards">
-    <div class="card">
-      <img src="images/public-app/01-app-admin.png" alt="Public reviews app admin">
-      <h3>Public Shopify reviews app</h3>
-      <div class="meta">Submitted to the Shopify App Store · under review</div>
-      <p>
-        A multi-merchant version of the reviews platform, built for public distribution so any merchant can
-        install it: review capture with photos and video, moderation, storefront display, and per-merchant
-        configuration.
-      </p>
-    </div>
-
     <div class="card">
       <img src="images/theme/02-3d-showcase.png" alt="Theme 3D showcase">
       <h3>Premium Online Store 2.0 theme</h3>
