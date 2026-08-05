@@ -330,6 +330,77 @@ footer a{color:var(--text-2)}
 
 <article class="case">
   <div class="case-top">
+    <h2>In-house reviews platform</h2>
+    <span class="meta">Architect &amp; engineer · live in production</span>
+  </div>
+  <div class="tags">
+    <span class="tag">Custom Shopify app</span><span class="tag">Shopify Admin API</span>
+    <span class="tag">Storefront widget</span><span class="tag">Bulk import</span>
+    <span class="tag">Shopify CDN media</span><span class="tag plain">Merchant-configurable</span>
+  </div>
+
+  <div class="stats" style="margin:0 0 26px">
+    <div class="stat"><div class="v">10,065</div><div class="l">Live reviews</div></div>
+    <div class="stat"><div class="v">7,802</div><div class="l">Verified buyers</div></div>
+    <div class="stat"><div class="v">918</div><div class="l">Products reviewed</div></div>
+    <div class="stat"><div class="v">4.82<span class="d">★</span></div><div class="l">Average rating across the catalogue</div></div>
+  </div>
+
+  <div class="split">
+    <div>
+      <h4>Why build it</h4>
+      <p>
+        The paid reviews app cost a subscription, injected its own script into every page, and locked the
+        display rules and widget design to its own template. Replacing it meant owning the review data, the
+        structured output search engines read, and the ordering rules that decide what a new visitor sees first.
+      </p>
+    </div>
+    <div>
+      <h4>What it has to handle</h4>
+      <p>
+        Ten thousand reviews across nine hundred products is past the point where anything can be done by hand.
+        The whole design assumption is that a non-technical team runs this daily: moderation, imports, display
+        rules and the widget's appearance all have to be theirs to change, without a developer and without a
+        deploy.
+      </p>
+    </div>
+  </div>
+
+  <h3>What I built</h3>
+  <ul>
+    <li><strong>A moderation queue with real actions.</strong> Approve, hide, verify, pin to top, edit or
+      delete per review, with search across text, author and email, and filters by product, status, star
+      rating and media.</li>
+    <li><strong>Bulk import that doesn't duplicate.</strong> The Excel template ships with a
+      <code>product_handle</code> dropdown of every live product, <strong>regenerated fresh from Shopify on
+      every download</strong>, so it always reflects newly added products and drops removed ones. Re-uploading
+      the same rows updates them instead of creating copies — which is what makes a spreadsheet safe to hand
+      to a non-engineer.</li>
+    <li><strong>Photo hosting that stays inside Shopify.</strong> Customer images upload through the dashboard
+      and are stored on the store's own CDN, returning URLs to paste back into the import sheet — no external
+      media host to keep alive.</li>
+    <li><strong>Merchant-controlled display order.</strong> Newest first, photos first, highest rating or most
+      helpful, with pinned reviews always ahead of the rule. That ordering decision is a conversion lever, so
+      it belongs to the merchandising team rather than to me.</li>
+    <li><strong>A widget designer with live preview.</strong> Colours, sizes and card styling apply
+      store-wide on save, previewed in place before committing.</li>
+    <li><strong>Backdating and verified badges</strong> on manual entry, plus an aggregate recompute that
+      rebuilds every product's star totals and averages after a bulk change or an edit made directly in the
+      Shopify admin.</li>
+  </ul>
+
+  <div class="shots">
+    <figure class="shot"><img src="images/reviews-app/03-overview.jpg" alt="Reviews dashboard"><div class="cap">Overview — distribution, volume and rating trend</div></figure>
+    <figure class="shot"><img src="images/reviews-app/02-moderation.jpg" alt="Moderation"><div class="cap">Moderation — approve, verify, pin, hide</div></figure>
+    <figure class="shot"><img src="images/reviews-app/04-bulk-upload.jpg" alt="Bulk upload"><div class="cap">Bulk import with a Shopify-synced product dropdown</div></figure>
+    <figure class="shot"><img src="images/reviews-app/05-widget-designer.jpg" alt="Widget designer"><div class="cap">Display rules and widget designer</div></figure>
+    <figure class="shot"><img src="images/reviews-app/06-add-review.jpg" alt="Add review"><div class="cap">Manual entry with backdating</div></figure>
+    <figure class="shot"><img src="images/reviews-app/01-storefront-widget.jpg" alt="Storefront widget"><div class="cap">The widget on a product page</div></figure>
+  </div>
+</article>
+
+<article class="case">
+  <div class="case-top">
     <h2>Divine Points — loyalty &amp; cashback microservice</h2>
     <span class="meta">Architect &amp; engineer · live in production</span>
   </div>
@@ -432,17 +503,10 @@ footer a{color:var(--text-2)}
       activity, with an append-only transaction log behind everything.</li>
   </ul>
 
-  <p>
-    Alongside it I built the <strong>in-house reviews application</strong> — a separate service with its own
-    backend and admin — replacing the second paid app. Between them they removed over US$1,000 a month of
-    subscription cost and the third-party scripts that came with it.
-  </p>
-
   <div class="shots">
     <figure class="shot"><img src="images/divine-points/01-admin.png" alt="Loyalty admin"><div class="cap">Merchant admin — rules, slabs and caps</div></figure>
     <figure class="shot"><img src="images/divine-points/02-storefront-widget.png" alt="Storefront widget"><div class="cap">Storefront widget — balance and redeem box</div></figure>
     <figure class="shot"><img src="images/divine-points/03-checkout-redeem.png" alt="Checkout redemption"><div class="cap">Redemption inside one-click checkout</div></figure>
-    <figure class="shot"><img src="images/reviews-app/01-storefront-widget.jpg" alt="Reviews widget"><div class="cap">In-house reviews app on the storefront</div></figure>
   </div>
 </article>
 
