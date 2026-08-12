@@ -15,9 +15,11 @@ on a call.
 ## Built with
 
 No framework, no build step, no dependencies. One self-contained `index.html`: hand-written HTML and CSS,
-CSS custom properties for theming, inline SVG for the architecture diagrams, and about twenty lines of
-vanilla JavaScript for the theme toggle and screenshot lightbox. Responsive down to 390px, light and dark
-modes, no external requests.
+CSS custom properties for theming, inline SVG for the architecture diagrams, and a small block of vanilla
+JavaScript for the theme toggle, screenshot lightbox, scroll-reveal animations, category filtering, scrollspy
+and the reading-progress bar. Every animation runs on transform and opacity only (compositor-friendly) and
+the whole motion layer disables itself under `prefers-reduced-motion`. Responsive down to 390px, light and
+dark modes, no external requests.
 
 ## Structure
 

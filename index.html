@@ -11,109 +11,172 @@
 <style>
 :root{
   color-scheme: dark;
-  --surface-1:#1a1a19; --plane:#0d0d0d; --raised:#212120;
-  --text-1:#ffffff; --text-2:#c3c2b7; --muted:#898781;
-  --line:#2c2c2a; --rule:#383835;
-  --accent:#3987e5; --accent-soft:rgba(57,135,229,.14);
-  --good:#0ca30c; --warn:#fab219;
-  --ring:rgba(255,255,255,.10);
-  --shadow:0 1px 2px rgba(0,0,0,.5),0 8px 28px rgba(0,0,0,.35);
+  --plane:#0e0d0b; --surface-1:#161411; --raised:#1e1b17;
+  --text-1:#f5f2ea; --text-2:#c9c3b4; --muted:#8f8a7c;
+  --line:#28251f; --rule:#3a362d;
+  --accent:#d9a441; --accent-2:#e6bc6a; --accent-soft:rgba(217,164,65,.13);
+  --good:#69c46f; --ring:rgba(245,242,234,.10);
+  --shadow:0 1px 2px rgba(0,0,0,.5),0 12px 36px rgba(0,0,0,.38);
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  --sans:system-ui,-apple-system,"Segoe UI",sans-serif;
 }
 :root[data-theme="light"]{
   color-scheme: light;
-  --surface-1:#fcfcfb; --plane:#f9f9f7; --raised:#ffffff;
-  --text-1:#0b0b0b; --text-2:#52514e; --muted:#898781;
-  --line:#e1e0d9; --rule:#c3c2b7;
-  --accent:#2a78d6; --accent-soft:rgba(42,120,214,.10);
-  --good:#006300; --warn:#b57d00;
-  --ring:rgba(11,11,11,.10);
-  --shadow:0 1px 2px rgba(11,11,11,.06),0 8px 28px rgba(11,11,11,.08);
+  --plane:#faf8f3; --surface-1:#ffffff; --raised:#fffdf8;
+  --text-1:#191510; --text-2:#4f4a3f; --muted:#867f6f;
+  --line:#e7e2d5; --rule:#cfc8b6;
+  --accent:#8a5f18; --accent-2:#a4761f; --accent-soft:rgba(164,118,31,.10);
+  --good:#1d7a24; --ring:rgba(25,21,16,.10);
+  --shadow:0 1px 2px rgba(25,21,16,.05),0 12px 36px rgba(25,21,16,.09);
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth; scroll-padding-top:76px}
+html{scroll-behavior:smooth; scroll-padding-top:86px}
 body{
   margin:0; background:var(--plane); color:var(--text-1);
-  font:16px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif;
-  -webkit-font-smoothing:antialiased;
+  font:16px/1.68 var(--sans);
+  -webkit-font-smoothing:antialiased; overflow-x:hidden;
 }
-a{color:var(--accent); text-decoration:none}
+a{color:var(--accent-2); text-decoration:none}
 a:hover{text-decoration:underline}
-.wrap{max-width:1080px; margin:0 auto; padding:0 24px}
-@media(max-width:760px){
-  nav .wrap{height:56px}
-  .brand{white-space:nowrap}
-  .navlinks a{display:none}
+::selection{background:var(--accent); color:#14110b}
+.wrap{max-width:1120px; margin:0 auto; padding:0 26px}
+
+/* ---------- motion primitives ---------- */
+.rv{opacity:0; transform:translateY(22px); transition:opacity .7s cubic-bezier(.2,.6,.2,1), transform .7s cubic-bezier(.2,.6,.2,1)}
+.rv.in{opacity:1; transform:none}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  .rv{opacity:1; transform:none; transition:none}
+  .aurora,.mq-track{animation:none !important}
+  *{transition-duration:.01ms !important}
 }
+
+/* ---------- scroll progress ---------- */
+#progress{position:fixed; top:0; left:0; height:2px; width:100%; background:var(--accent);
+  transform-origin:0 50%; transform:scaleX(0); z-index:90}
 
 /* ---------- nav ---------- */
 nav{
-  position:sticky; top:0; z-index:50; background:color-mix(in srgb,var(--plane) 88%,transparent);
-  backdrop-filter:blur(10px); border-bottom:1px solid var(--line);
+  position:sticky; top:0; z-index:50; background:color-mix(in srgb,var(--plane) 86%,transparent);
+  backdrop-filter:blur(12px); border-bottom:1px solid var(--line);
 }
-nav .wrap{display:flex; align-items:center; gap:24px; height:60px}
-.brand{font-weight:700; letter-spacing:.2px; color:var(--text-1)}
+nav .wrap{display:flex; align-items:center; gap:26px; height:64px}
+.brand{font-family:var(--serif); font-size:19px; font-weight:700; letter-spacing:.2px; color:var(--text-1)}
 .brand:hover{text-decoration:none}
-.navlinks{display:flex; gap:20px; margin-left:auto; align-items:center; flex-wrap:wrap}
-.navlinks a{color:var(--text-2); font-size:14px}
+.brand em{color:var(--accent); font-style:normal}
+.navlinks{display:flex; gap:22px; margin-left:auto; align-items:center}
+.navlinks a{color:var(--text-2); font-size:13.5px; letter-spacing:.04em; position:relative; padding:4px 0}
+.navlinks a::after{content:""; position:absolute; left:0; right:100%; bottom:0; height:1.5px; background:var(--accent); transition:right .3s ease}
 .navlinks a:hover{color:var(--text-1); text-decoration:none}
+.navlinks a:hover::after,.navlinks a.on::after{right:0}
+.navlinks a.on{color:var(--text-1)}
 #themeBtn{
   background:transparent; border:1px solid var(--rule); color:var(--text-2);
-  border-radius:8px; width:34px; height:32px; cursor:pointer; font-size:15px; line-height:1;
+  border-radius:999px; width:36px; height:34px; cursor:pointer; font-size:15px; line-height:1;
+  transition:border-color .25s, color .25s, transform .25s;
 }
-#themeBtn:hover{color:var(--text-1); border-color:var(--accent)}
+#themeBtn:hover{color:var(--accent); border-color:var(--accent); transform:rotate(40deg)}
+@media(max-width:820px){ nav .wrap{height:58px} .navlinks a{display:none} .navlinks #themeBtn{display:block} }
 
 /* ---------- hero ---------- */
-header.hero{padding:76px 0 56px; border-bottom:1px solid var(--line)}
-.eyebrow{color:var(--accent); font-size:13px; font-weight:650; letter-spacing:.14em; text-transform:uppercase; margin:0 0 14px}
-h1{font-size:clamp(32px,5.2vw,52px); line-height:1.1; margin:0 0 20px; letter-spacing:-.02em}
-.lede{font-size:clamp(17px,2.1vw,20px); color:var(--text-2); max-width:70ch; margin:0 0 26px}
-.lede strong{color:var(--text-1); font-weight:650}
-.herolinks{display:flex; gap:12px; flex-wrap:wrap; margin-top:28px}
-.btn{
-  display:inline-block; padding:10px 18px; border-radius:9px; font-size:14px; font-weight:600;
-  border:1px solid var(--rule); color:var(--text-1);
+header.hero{position:relative; padding:104px 0 64px; border-bottom:1px solid var(--line); overflow:hidden}
+.aurora{position:absolute; inset:-20% -10% auto auto; width:640px; height:640px; pointer-events:none;
+  background:radial-gradient(closest-side, var(--accent-soft), transparent 70%);
+  filter:blur(40px); opacity:.9; animation:drift 19s ease-in-out infinite alternate}
+.aurora.b{inset:auto auto -30% -12%; width:520px; height:520px; animation-duration:23s; animation-delay:-8s}
+@keyframes drift{
+  0%{transform:translate(0,0) scale(1)}
+  100%{transform:translate(-90px,70px) scale(1.25)}
 }
-.btn:hover{border-color:var(--accent); text-decoration:none}
-.btn.primary{background:var(--accent); border-color:var(--accent); color:#fff}
-.btn.primary:hover{filter:brightness(1.08)}
+.eyebrow{color:var(--accent); font-size:12.5px; font-weight:650; letter-spacing:.22em; text-transform:uppercase; margin:0 0 18px}
+h1{font-family:var(--serif); font-size:clamp(38px,6vw,66px); line-height:1.06; margin:0 0 22px; letter-spacing:-.015em; font-weight:600; max-width:20ch}
+h1 em{font-style:italic; color:var(--accent-2)}
+.lede{font-size:clamp(16.5px,2vw,19px); color:var(--text-2); max-width:66ch; margin:0 0 26px}
+.lede strong{color:var(--text-1); font-weight:640}
+.herolinks{display:flex; gap:12px; flex-wrap:wrap; margin-top:30px}
+.btn{
+  display:inline-block; padding:11px 20px; border-radius:999px; font-size:14px; font-weight:600;
+  border:1px solid var(--rule); color:var(--text-1);
+  transition:transform .25s ease, border-color .25s, background .25s, color .25s;
+}
+.btn:hover{border-color:var(--accent); text-decoration:none; transform:translateY(-2px)}
+.btn.primary{background:var(--accent); border-color:var(--accent); color:#17130c}
+.btn.primary:hover{background:var(--accent-2); border-color:var(--accent-2)}
 
 /* ---------- stat tiles ---------- */
 .stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:1px; background:var(--line);
-  border:1px solid var(--line); border-radius:12px; overflow:hidden; margin:40px 0 0}
-.stat{background:var(--surface-1); padding:20px 22px}
-.stat .v{font-size:clamp(22px,2.4vw,29px); font-weight:700; letter-spacing:-.02em; line-height:1.15; white-space:nowrap}
-.stat .l{font-size:13px; color:var(--muted); margin-top:6px; line-height:1.45}
+  border:1px solid var(--line); border-radius:14px; overflow:hidden; margin:44px 0 0}
+.stat{background:var(--surface-1); padding:22px 24px; transition:background .3s}
+.stat:hover{background:var(--raised)}
+.stat .v{font-family:var(--serif); font-size:clamp(24px,2.6vw,32px); font-weight:700; letter-spacing:-.02em; line-height:1.12; white-space:nowrap}
+.stat .l{font-size:12.5px; color:var(--muted); margin-top:7px; line-height:1.5; letter-spacing:.02em}
 .stat .d{color:var(--good); font-weight:650}
 
+/* ---------- marquee ---------- */
+.mq{border-bottom:1px solid var(--line); overflow:hidden; padding:15px 0; background:var(--surface-1)}
+.mq-track{display:flex; gap:44px; width:max-content; animation:mq 36s linear infinite; will-change:transform}
+.mq span{font-size:12px; font-weight:650; letter-spacing:.22em; text-transform:uppercase; color:var(--muted); white-space:nowrap}
+.mq span::after{content:"◆"; color:var(--accent); margin-left:44px; font-size:8px; vertical-align:2px}
+@keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
 /* ---------- sections ---------- */
-section{padding:72px 0; border-bottom:1px solid var(--line)}
-.sechead{margin-bottom:8px}
-h2{font-size:clamp(24px,3.4vw,34px); margin:0 0 10px; letter-spacing:-.02em}
-h3{font-size:19px; margin:32px 0 10px; letter-spacing:-.01em}
-h4{font-size:14px; margin:0 0 8px; color:var(--muted); text-transform:uppercase; letter-spacing:.1em; font-weight:650}
+section{padding:84px 0; border-bottom:1px solid var(--line)}
+.seclabel{color:var(--accent); font-size:12px; font-weight:650; letter-spacing:.22em; text-transform:uppercase; margin:0 0 10px}
+.sechead{margin-bottom:14px}
+h2{font-family:var(--serif); font-size:clamp(26px,3.6vw,38px); margin:0 0 12px; letter-spacing:-.01em; font-weight:600}
+h3{font-size:19px; margin:34px 0 10px; letter-spacing:-.01em}
+h4{font-size:13px; margin:0 0 8px; color:var(--muted); text-transform:uppercase; letter-spacing:.14em; font-weight:650}
 p{margin:0 0 16px; color:var(--text-2); max-width:74ch}
 p strong{color:var(--text-1); font-weight:640}
 ul{margin:0 0 16px; padding-left:20px; color:var(--text-2); max-width:74ch}
 li{margin-bottom:8px}
 li strong{color:var(--text-1); font-weight:640}
 
+/* ---------- filter + index ---------- */
+.filters{display:flex; gap:9px; flex-wrap:wrap; margin:26px 0 30px; position:sticky; top:64px; z-index:40;
+  padding:12px 0; background:color-mix(in srgb,var(--plane) 90%,transparent); backdrop-filter:blur(10px)}
+.chip{
+  border:1px solid var(--rule); background:transparent; color:var(--text-2); cursor:pointer;
+  padding:8px 16px; border-radius:999px; font-size:13px; font-weight:600; font-family:var(--sans);
+  transition:all .25s ease;
+}
+.chip:hover{border-color:var(--accent); color:var(--text-1)}
+.chip.on{background:var(--accent); border-color:var(--accent); color:#17130c}
+.idx{display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px}
+.ix{
+  border:1px solid var(--line); border-radius:14px; background:var(--surface-1); padding:20px 22px;
+  display:flex; flex-direction:column; gap:6px; color:inherit; position:relative; overflow:hidden;
+  transition:transform .3s cubic-bezier(.2,.6,.2,1), border-color .3s, box-shadow .3s;
+}
+.ix:hover{transform:translateY(-4px); border-color:var(--rule); box-shadow:var(--shadow); text-decoration:none}
+.ix::before{content:""; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--accent);
+  transform:scaleY(0); transform-origin:top; transition:transform .3s ease}
+.ix:hover::before{transform:scaleY(1)}
+.ix .k{font-size:11px; font-weight:650; letter-spacing:.18em; text-transform:uppercase; color:var(--accent)}
+.ix .t{font-family:var(--serif); font-size:19px; font-weight:650; color:var(--text-1); line-height:1.25}
+.ix .s{font-size:13.5px; color:var(--muted); line-height:1.55}
+.ix .g{margin-top:auto; padding-top:8px; font-size:13px; color:var(--accent-2); font-weight:600}
+
 /* ---------- case study ---------- */
-.case{border:1px solid var(--line); border-radius:14px; background:var(--surface-1); padding:30px; margin-bottom:34px; box-shadow:var(--shadow)}
+.case{border:1px solid var(--line); border-radius:18px; background:var(--surface-1); padding:34px; margin-bottom:38px; box-shadow:var(--shadow)}
+.case.hidden,.card.hidden,.ix.hidden{display:none}
 .case-top{display:flex; flex-wrap:wrap; gap:14px; align-items:baseline; justify-content:space-between; margin-bottom:6px}
-.case h2{margin:0}
+.case h2{margin:0; font-size:clamp(23px,3vw,32px)}
 .case .meta{font-size:13px; color:var(--muted)}
-.tags{display:flex; flex-wrap:wrap; gap:7px; margin:16px 0 22px}
-.tag{font-size:12px; padding:4px 10px; border-radius:999px; background:var(--accent-soft); color:var(--accent); border:1px solid transparent; font-weight:600}
+.tags{display:flex; flex-wrap:wrap; gap:7px; margin:16px 0 24px}
+.tag{font-size:12px; padding:4px 11px; border-radius:999px; background:var(--accent-soft); color:var(--accent-2); border:1px solid transparent; font-weight:600; transition:transform .2s}
+.tag:hover{transform:translateY(-1px)}
 .tag.plain{background:transparent; color:var(--muted); border-color:var(--rule)}
-.split{display:grid; grid-template-columns:1fr 1fr; gap:28px}
-@media(max-width:800px){.split{grid-template-columns:1fr}}
-.callout{border-left:3px solid var(--accent); background:var(--accent-soft); padding:14px 18px; border-radius:0 8px 8px 0; margin:20px 0}
+:root[data-theme="light"] .tag{color:var(--accent)}
+.split{display:grid; grid-template-columns:1fr 1fr; gap:30px}
+@media(max-width:800px){.split{grid-template-columns:1fr} .case{padding:24px}}
+.callout{border-left:3px solid var(--accent); background:var(--accent-soft); padding:14px 18px; border-radius:0 10px 10px 0; margin:20px 0}
 .callout p{margin:0; color:var(--text-1)}
 
 /* ---------- diagram ---------- */
-figure{margin:24px 0}
-figure svg{width:100%; height:auto; display:block; border:1px solid var(--line); border-radius:10px; background:var(--plane)}
-figcaption{font-size:13px; color:var(--muted); margin-top:8px}
+figure{margin:26px 0}
+figure svg{width:100%; height:auto; display:block; border:1px solid var(--line); border-radius:12px; background:var(--plane)}
+figcaption{font-size:13px; color:var(--muted); margin-top:9px}
 svg .bx{fill:var(--raised); stroke:var(--rule)}
 svg .bx-a{fill:var(--accent-soft); stroke:var(--accent)}
 svg .tx{fill:var(--text-1); font:600 13px system-ui,sans-serif}
@@ -121,33 +184,40 @@ svg .tx-s{fill:var(--muted); font:400 11px system-ui,sans-serif}
 svg .ar{stroke:var(--rule); fill:none; stroke-width:1.5}
 
 /* ---------- gallery ---------- */
-.shots{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:16px; margin-top:24px}
-.shot{border:1px solid var(--line); border-radius:10px; overflow:hidden; background:var(--plane); cursor:zoom-in}
-.shot img{width:100%; display:block; aspect-ratio:16/10; object-fit:cover}
-.shot .cap{font-size:12px; color:var(--muted); padding:9px 12px; border-top:1px solid var(--line)}
+.shots{display:grid; grid-template-columns:repeat(auto-fit,minmax(255px,1fr)); gap:16px; margin-top:26px}
+.shot{border:1px solid var(--line); border-radius:12px; overflow:hidden; background:var(--plane); cursor:zoom-in;
+  transition:transform .35s cubic-bezier(.2,.6,.2,1), box-shadow .35s, border-color .35s}
+.shot:hover{transform:translateY(-4px); box-shadow:var(--shadow); border-color:var(--rule)}
+.shot img{width:100%; display:block; aspect-ratio:16/10; object-fit:cover; transition:transform .6s cubic-bezier(.2,.6,.2,1)}
+.shot:hover img{transform:scale(1.045)}
+.shot .cap{font-size:12px; color:var(--muted); padding:10px 13px; border-top:1px solid var(--line); position:relative; background:var(--surface-1)}
 
 /* ---------- brief cards ---------- */
 .cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:18px}
-.card{border:1px solid var(--line); border-radius:12px; background:var(--surface-1); padding:22px; display:flex; flex-direction:column}
-.card h3{margin:0 0 4px; font-size:18px}
+.card{border:1px solid var(--line); border-radius:16px; background:var(--surface-1); padding:24px; display:flex; flex-direction:column;
+  transition:transform .3s cubic-bezier(.2,.6,.2,1), box-shadow .3s}
+.card:hover{transform:translateY(-4px); box-shadow:var(--shadow)}
+.card h3{margin:0 0 4px; font-size:19px; font-family:var(--serif)}
 .card .meta{font-size:12px; color:var(--muted); margin-bottom:12px}
 .card p{font-size:14.5px; flex:1}
-.card img{width:100%; border-radius:8px; border:1px solid var(--line); margin-bottom:14px; aspect-ratio:16/10; object-fit:cover; cursor:zoom-in}
+.card img{width:100%; border-radius:10px; border:1px solid var(--line); margin-bottom:16px; aspect-ratio:16/10; object-fit:cover; cursor:zoom-in}
 
 /* ---------- lightbox ---------- */
-#lb{position:fixed; inset:0; background:rgba(0,0,0,.9); display:none; align-items:center; justify-content:center; z-index:100; padding:32px; cursor:zoom-out}
+#lb{position:fixed; inset:0; background:rgba(10,9,7,.93); display:none; align-items:center; justify-content:center; z-index:100; padding:32px; cursor:zoom-out}
 #lb.on{display:flex}
-#lb img{max-width:100%; max-height:100%; border-radius:8px}
+#lb img{max-width:100%; max-height:100%; border-radius:10px; animation:lbin .25s ease}
+@keyframes lbin{from{opacity:0; transform:scale(.96)}to{opacity:1; transform:none}}
 
-footer{padding:56px 0 72px; color:var(--muted); font-size:14px}
+footer{padding:60px 0 80px; color:var(--muted); font-size:14px}
 footer a{color:var(--text-2)}
-.note{font-size:13.5px; color:var(--muted); border:1px dashed var(--rule); border-radius:10px; padding:14px 16px; margin:22px 0}
+.note{font-size:13.5px; color:var(--muted); border:1px dashed var(--rule); border-radius:12px; padding:14px 16px; margin:22px 0}
 </style>
 </head>
 <body>
 
+<div id="progress"></div>
 <nav><div class="wrap">
-  <a class="brand" href="#top">Kanishka Jain</a>
+  <a class="brand" href="#top">Kanishka <em>Jain</em></a>
   <div class="navlinks">
     <a href="#work">Work</a>
     <a href="#storefront">Storefront</a>
@@ -159,9 +229,11 @@ footer a{color:var(--text-2)}
   </div>
 </div></nav>
 
-<header class="hero" id="top"><div class="wrap">
+<header class="hero" id="top">
+  <div class="aurora"></div><div class="aurora b"></div>
+  <div class="wrap">
   <p class="eyebrow">Shopify &amp; Full-Stack Engineer · Gurgaon, India · Remote</p>
-  <h1>I build the storefront, the apps behind it,<br>and the systems behind those.</h1>
+  <h1>I build the storefront, the apps behind it, <em>and the systems behind those.</em></h1>
   <p class="lede">
     I am the <strong>sole engineer</strong> behind a D2C business trading at <strong>₹5 crore (~US$600K) monthly
     GMV</strong> — an 800-SKU Shopify storefront hand-coded in Liquid, two custom Shopify applications that
@@ -169,7 +241,7 @@ footer a{color:var(--text-2)}
     agents</strong>, and a cross-platform super-app on the Play Store. Alongside it I built and submitted
     <strong>two commercial Shopify products of my own</strong> — a public multi-tenant app and a premium Online
     Store 2.0 theme — both now in review for the App Store and Theme Store. Every system below was designed and
-    built from scratch.
+    built from scratch — including this site: hand-written, zero dependencies, animated on the compositor.
   </p>
   <div class="herolinks">
     <a class="btn primary" href="#work">See the case studies</a>
@@ -186,9 +258,15 @@ footer a{color:var(--text-2)}
   </div>
 </div></header>
 
+<div class="mq" aria-hidden="true"><div class="mq-track">
+  <span>Shopify Liquid</span><span>Online Store 2.0</span><span>Theme App Extensions</span><span>Admin GraphQL</span><span>React</span><span>Next.js</span><span>React Native</span><span>TypeScript</span><span>Node.js</span><span>Python</span><span>PostgreSQL</span><span>Azure</span><span>App Store Review</span><span>Theme Store Review</span>
+  <span>Shopify Liquid</span><span>Online Store 2.0</span><span>Theme App Extensions</span><span>Admin GraphQL</span><span>React</span><span>Next.js</span><span>React Native</span><span>TypeScript</span><span>Node.js</span><span>Python</span><span>PostgreSQL</span><span>Azure</span><span>App Store Review</span><span>Theme Store Review</span>
+</div></div>
+
 <section id="work"><div class="wrap">
   <div class="sechead">
-    <h2>How to read this portfolio</h2>
+    <p class="seclabel">The work</p>
+    <h2>Nine systems, one engineer</h2>
     <p>
       Everything below is proprietary — it belongs to the businesses that paid for it — so there is no public
       repository to browse and some URLs and admin systems can't be published on an open page. That is a
@@ -198,21 +276,36 @@ footer a{color:var(--text-2)}
     </p>
     <p>
       What each write-up gives you is <strong>the problem, the constraints, the architecture, the decisions and
-      the measured result</strong>, plus screenshots of the running systems. That is the same material I would
-      walk a technical interviewer through, and I am happy to go deeper on any of it, including whiteboarding
-      the parts that can't be shown here.
-    </p>
-    <p>
-      Six systems get a full write-up. Three more are summarised at the end. Everything listed is live in
+      the measured result</strong>, plus screenshots of the running systems. Everything listed is live in
       production or in review with Shopify.
     </p>
+  </div>
+
+  <div class="filters" role="tablist" aria-label="Filter projects by category">
+    <button class="chip on" data-filter="all">All work</button>
+    <button class="chip" data-filter="store">Storefronts &amp; Themes</button>
+    <button class="chip" data-filter="apps">Shopify Apps</button>
+    <button class="chip" data-filter="mobile">Mobile &amp; AI</button>
+  </div>
+
+  <div class="idx">
+    <a class="ix" href="#dh-store" data-cat="store"><span class="k">Storefront</span><span class="t">Divine Hindu</span><span class="s">800-SKU storefront hand-coded in Liquid · ~US$600K/month · Lighthouse 60 → 90+</span><span class="g">Read the case study →</span></a>
+    <a class="ix" href="#more" data-cat="store"><span class="k">Commercial theme</span><span class="t">Prominent</span><span class="s">Premium OS 2.0 theme in Theme Store review · 97/100 performance, 100/100 accessibility</span><span class="g">See it →</span></a>
+    <a class="ix" href="#reviewmaster" data-cat="apps"><span class="k">Public app</span><span class="t">ReviewMaster</span><span class="s">Multi-tenant reviews SaaS in App Store review · Protected Customer Data Level 2</span><span class="g">Read the case study →</span></a>
+    <a class="ix" href="#reviews-inhouse" data-cat="apps"><span class="k">Custom app</span><span class="t">In-house reviews platform</span><span class="s">10,065 reviews · 918 products · 4.82★ · run daily by non-technical staff</span><span class="g">Read the case study →</span></a>
+    <a class="ix" href="#divine-points" data-cat="apps"><span class="k">Custom app</span><span class="t">Divine Points</span><span class="s">Loyalty &amp; cashback ledger settling redemption inside a third-party one-click checkout</span><span class="g">Read the case study →</span></a>
+    <a class="ix" href="#super-app" data-cat="mobile"><span class="k">Mobile</span><span class="t">Divine Hindu super-app</span><span class="s">React Native on the Play Store — commerce, on-device astrology and live consultations</span><span class="g">Read the case study →</span></a>
+    <a class="ix" href="#astro" data-cat="mobile"><span class="k">AI platform</span><span class="t">Astrology report platform</span><span class="s">30+ domain-tuned agents turning storefront orders into delivered PDF reports</span><span class="g">Read the case study →</span></a>
+    <a class="ix" href="#more" data-cat="store"><span class="k">Client storefront</span><span class="t">Pujaghar</span><span class="s">Combo builder with stacked discounts, flash-deal unlocks, certificate traceability</span><span class="g">See it →</span></a>
+    <a class="ix" href="#more" data-cat="store"><span class="k">Client storefront</span><span class="t">Shapify</span><span class="s">D2C apparel — video-led product pages, BOGO logic, prepaid incentives</span><span class="g">See it →</span></a>
   </div>
 </div></section>
 
 <!-- ============ 1. STOREFRONT ============ -->
-<section id="storefront"><div class="wrap">
+<section id="storefront" data-group><div class="wrap">
+  <p class="seclabel">01 · Storefront</p>
 
-<article class="case">
+<article class="case" id="dh-store" data-cat="store">
   <div class="case-top">
     <h2>Divine Hindu — 800-SKU Shopify storefront</h2>
     <span class="meta">Lead engineer · Feb 2024 – present · <a href="https://www.divinehindu.in/" target="_blank" rel="noopener">divinehindu.in ↗</a></span>
@@ -329,9 +422,10 @@ footer a{color:var(--text-2)}
 </div></section>
 
 <!-- ============ 2. IN-HOUSE APPS ============ -->
-<section id="apps"><div class="wrap">
+<section id="apps" data-group><div class="wrap">
+  <p class="seclabel">02 · Shopify Applications &amp; Mobile</p>
 
-<article class="case">
+<article class="case" id="reviews-inhouse" data-cat="apps">
   <div class="case-top">
     <h2>In-house reviews platform</h2>
     <span class="meta">Architect &amp; engineer · live in production</span>
@@ -402,7 +496,7 @@ footer a{color:var(--text-2)}
   </div>
 </article>
 
-<article class="case">
+<article class="case" id="reviewmaster" data-cat="apps">
   <div class="case-top">
     <h2>ReviewMaster — a public, multi-tenant Shopify reviews app</h2>
     <span class="meta">Architect &amp; sole engineer · submitted to the Shopify App Store</span>
@@ -619,7 +713,7 @@ footer a{color:var(--text-2)}
   </div>
 </article>
 
-<article class="case">
+<article class="case" id="divine-points" data-cat="apps">
   <div class="case-top">
     <h2>Divine Points — loyalty &amp; cashback microservice</h2>
     <span class="meta">Architect &amp; engineer · live in production</span>
@@ -743,7 +837,7 @@ footer a{color:var(--text-2)}
   </div>
 </article>
 
-<article class="case">
+<article class="case" id="super-app" data-cat="mobile">
   <div class="case-top">
     <h2>Divine Hindu super-app — commerce, astrology and devotion in one</h2>
     <span class="meta">Architect &amp; engineer · live on the Play Store</span>
@@ -858,10 +952,11 @@ footer a{color:var(--text-2)}
 </div></section>
 
 <!-- ============ 3 + 4. PLATFORMS ============ -->
-<section id="platforms"><div class="wrap">
+<section id="platforms" data-group><div class="wrap">
+  <p class="seclabel">03 · Platforms</p>
 
 <!-- AI ENGINE -->
-<article class="case">
+<article class="case" id="astro" data-cat="mobile">
   <div class="case-top">
     <h2>Astrology report &amp; lead-delivery platform</h2>
     <span class="meta">Architect &amp; engineer · live in production · <a href="https://www.divinehindu.in/pages/services" target="_blank" rel="noopener">services ↗</a></span>
@@ -1101,12 +1196,13 @@ footer a{color:var(--text-2)}
 
 </div></section>
 <!-- ============ MORE ============ -->
-<section id="more"><div class="wrap">
+<section id="more" data-group><div class="wrap">
+  <p class="seclabel">04 · Also shipped</p>
   <h2>Also shipped</h2>
   <p>Three more production builds — same approach, shorter write-up.</p>
 
   <div class="cards">
-    <div class="card">
+    <div class="card" data-cat="store">
       <img src="images/theme/01-theme-home.jpg" alt="Theme demo store">
       <h3>Premium Online Store 2.0 theme</h3>
       <div class="meta">Submitted to the Shopify Theme Store · under review</div>
@@ -1120,7 +1216,7 @@ footer a{color:var(--text-2)}
       </p>
     </div>
 
-    <div class="card">
+    <div class="card" data-cat="store">
       <img src="images/pujaghar/01-home.jpg" alt="Pujaghar">
       <h3>Pujaghar</h3>
       <div class="meta">Custom storefront, built from scratch ·
@@ -1132,7 +1228,7 @@ footer a{color:var(--text-2)}
       </p>
     </div>
 
-    <div class="card">
+    <div class="card" data-cat="store">
       <img src="images/shapify/01-home.jpg" alt="Shapify">
       <h3>Shapify</h3>
       <div class="meta">Custom storefront, built from scratch ·
@@ -1177,23 +1273,78 @@ footer a{color:var(--text-2)}
 
 <script>
 (function(){
-  // theme toggle, remembers nothing (no storage available) but respects OS on load
-  var root = document.documentElement, btn = document.getElementById('themeBtn');
-  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-    root.setAttribute('data-theme','light');
-  }
-  btn.addEventListener('click', function(){
-    root.setAttribute('data-theme', root.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
+  var d=document, root=d.documentElement;
+
+  /* theme */
+  var saved=null; try{saved=localStorage.getItem('theme')}catch(e){}
+  if(saved) root.setAttribute('data-theme',saved);
+  d.getElementById('themeBtn').addEventListener('click',function(){
+    var t=root.getAttribute('data-theme')==='dark'?'light':'dark';
+    root.setAttribute('data-theme',t);
+    try{localStorage.setItem('theme',t)}catch(e){}
   });
 
-  // lightbox
-  var lb = document.getElementById('lb'), lbimg = document.getElementById('lbimg');
-  document.addEventListener('click', function(e){
-    var img = e.target.closest('.shot img, .card img');
-    if (img) { lbimg.src = img.src; lbimg.alt = img.alt; lb.classList.add('on'); return; }
-    if (e.target.closest('#lb')) lb.classList.remove('on');
+  /* lightbox */
+  var lb=d.getElementById('lb'), lbimg=d.getElementById('lbimg');
+  d.addEventListener('click',function(e){
+    var img=e.target.closest('.shot img, .card > img');
+    if(img){lbimg.src=img.src; lb.classList.add('on');}
+    else if(e.target===lb||e.target===lbimg){lb.classList.remove('on'); lbimg.src='';}
   });
-  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') lb.classList.remove('on'); });
+  d.addEventListener('keydown',function(e){if(e.key==='Escape'){lb.classList.remove('on'); lbimg.src='';}});
+
+  /* scroll progress */
+  var bar=d.getElementById('progress');
+  function prog(){
+    var h=d.documentElement, max=h.scrollHeight-h.clientHeight;
+    bar.style.transform='scaleX('+(max>0?h.scrollTop/max:0)+')';
+  }
+  addEventListener('scroll',prog,{passive:true}); prog();
+
+  /* reveal on scroll */
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var targets=d.querySelectorAll('.case,.card,.ix,.stat,.sechead,.shot,figure,.mq');
+  if(!reduce && 'IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target);} });
+    },{rootMargin:'0px 0px -8% 0px',threshold:.06});
+    targets.forEach(function(el,i){
+      el.classList.add('rv');
+      el.style.transitionDelay=(Math.min((i%4)*70,210))+'ms';
+      io.observe(el);
+    });
+  }
+
+  /* category filter */
+  var chips=d.querySelectorAll('.chip'), items=d.querySelectorAll('[data-cat]');
+  chips.forEach(function(c){
+    c.addEventListener('click',function(){
+      chips.forEach(function(x){x.classList.remove('on')}); c.classList.add('on');
+      var f=c.getAttribute('data-filter');
+      items.forEach(function(it){
+        var show=(f==='all')||it.getAttribute('data-cat')===f;
+        it.classList.toggle('hidden',!show);
+      });
+      d.querySelectorAll('section[data-group]').forEach(function(s){
+        var any=s.querySelector('[data-cat]:not(.hidden)');
+        s.style.display=any?'':'none';
+      });
+    });
+  });
+
+  /* scrollspy */
+  var secs=d.querySelectorAll('section[id],header[id]');
+  var navA=d.querySelectorAll('.navlinks a[href^="#"]');
+  if('IntersectionObserver' in window){
+    var spy=new IntersectionObserver(function(es){
+      es.forEach(function(en){
+        if(en.isIntersecting){
+          navA.forEach(function(a){a.classList.toggle('on',a.getAttribute('href')==='#'+en.target.id)});
+        }
+      });
+    },{rootMargin:'-30% 0px -60% 0px'});
+    secs.forEach(function(s){spy.observe(s)});
+  }
 })();
 </script>
 </body>
