@@ -12,6 +12,20 @@ The client work is proprietary, so the site presents each system as a case study
 architecture, decisions, measured result — rather than as a repository. Every system is one I can demo live
 on a call.
 
+## What's in the portfolio
+
+| System | What it is |
+|---|---|
+| 800-SKU D2C Shopify storefront | Divine Hindu — hand-coded Liquid theme, ~US$600K/month, Lighthouse 60 → 90+ |
+| Product reviews app for the Shopify App Store | ReviewMaster — public multi-tenant SaaS, in review, Protected Customer Data Level 2 |
+| In-house reviews & ratings system | Custom Shopify app — 10,065 reviews across 918 products, operated daily by non-technical staff |
+| In-house loyalty program system | Points, cashback and redemption settled inside a third-party one-click checkout |
+| Cross-platform mobile shopping app | React Native on the Play Store — commerce, on-device astrology, live consultations |
+| AI report generation & delivery platform | 30+ domain-tuned agents turning storefront orders into delivered PDF reports |
+| Premium Shopify theme for the Theme Store | Prominent — 97/100 performance, 100/100 accessibility, 121 KB total JS |
+| Devotional-goods storefront | Pujaghar — combo builder, stacked discounts, flash-deal unlocks, certificate traceability |
+| D2C apparel storefront | Shapify — video-led product pages, BOGO logic, prepaid incentives |
+
 ## Built with
 
 No framework, no build step, no dependencies. One self-contained `index.html`: hand-written HTML and CSS,
